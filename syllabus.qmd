@@ -1,0 +1,41 @@
+# __DATA 5695: Predictive Methods for FinTech__
+
+### Spring 2024
+
+## Course Information
+
+- Dates: January 8 -- May 1
+- Time: T/Th 1:30 - 2:45 pm
+- Room: Huntsman Hall 130
+- [Course Canvas Page]()
+- [Course GitHub Repository]()
+
+
+## Instructor Information
+
+- [Tyler J. Brough](https://broughtj.github.io/)
+- Office: BUS 719
+- Office Hours: By Appointment
+- Email: tyler.brough@usu.edu
+
+
+## Course Description
+
+Prediction is a core activity of modern FinTech. This course uses probability, computational statistics, machine learning, and financial econometrics to develop and implement predictive strategies for trading and risk management by identifying and exploiting arbitrage opportunities.
+
+
+## Course Mechanics
+
+### Course Materials
+
+All course materials will be posted on Canvas, Slack, or GitHub.
+
+
+### Assessment, Deliverables, and Grading
+
+I would rather be your coach and companion in knowledge discovery than your judge.
+
+
+### Import Dates
+
+- March 9 -- 13 Spring Break
