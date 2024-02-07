@@ -1,0 +1,550 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\KOMAoption{captions}{tableheading}
+\makeatletter
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{tcolorbox}{}{\usepackage[skins,breakable]{tcolorbox}}
+\makeatother
+\makeatletter
+\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\makeatother
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Binomial Option Pricing},
+  pdfauthor={Dr.~Tyler J. Brough},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Binomial Option Pricing}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{DATA 5695: Homework \#1}
+\author{Dr.~Tyler J. Brough}
+\date{2024-02-06}
+
+\begin{document}
+\maketitle
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, enhanced, frame hidden, interior hidden, breakable, borderline west={3pt}{0pt}{shadecolor}, sharp corners]}{\end{tcolorbox}}\fi
+
+\section{Introduction}\label{introduction}
+
+This homework assignment is all about the Binomial options pricing
+model. It is based on Chapters 9, 10, 11 of the McDonald text.
+
+\subsection{Chapter 9: Parity and Other Option
+Relationships}\label{chapter-9-parity-and-other-option-relationships}
+
+\textbf{9.1} A stock currently sells for \(\$32.00\). A \(6\)-month call
+option with a strike of \(\$35\) has a premium of \(\$2.27\). Assuming a
+\(4\%\) continuously compounded risk-free rate and a \(6\%\) continuous
+dividend yield, what is the price of the associated put option?
+
+\textbf{9.2.} A stock currently sells for \(\$32.00\). A \(6\)-month
+call option with a strike of \(\$30.00\) has a premium of \(\$4.29\),
+and a \(6\)-month put with the same strike has a premium of \(\$2.64\).
+Assume a \(4\%\) continuously compounded risk-free rate. What is the
+present value of the dividends payable over the next \(6\) months?
+
+\textbf{9.3} Suppose the S\&R index is \(800\), the continuously
+compounded risk-free rate is \(5\%\), and the dividend yield is \(0\%\).
+A \(1\)-year \(815\)-strike European call costs \(\$75\) and a
+\(1\)-year \(815\)-strike European put costs \(\$45\). Consider the
+strategy of buying the stock, selling the \(815\)-strike call, and
+buying the \(815\)-strike put.
+
+\begin{itemize}
+\item
+  \textbf{a.} What is the rate of return on this position held until the
+  expiration of the options?
+\item
+  \textbf{b.} What is the arbitrage implied by your answer to (a)?
+\item
+  \textbf{c.} What difference between the call and put prices would
+  eliminate arbitrage?
+\item
+  \textbf{d.} What difference between the call and put prices eliminates
+  arbitrage for strike prices of \(\$780\), \(\$820\), and \(\$840\)?
+\end{itemize}
+
+\textbf{9.8} Suppose call and put prices are given by
+
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+\textbf{Strike} & \textbf{\(50\)} & \textbf{\(55\)} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Call Premium & 9 & 10 \\
+Put Premium & 7 & 6 \\
+\end{longtable}
+
+What no-arbitrage property is violated? What spread position would you
+use to effect arbitrage? Demonstrate that the spread position is an
+arbitrage?
+
+\textbf{9.9} Suppose call and put prices are given by
+
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+\textbf{Strike} & \textbf{\(50\)} & \textbf{\(55\)} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Call premium & 16 & 10 \\
+Put premium & 7 & 14 \\
+\end{longtable}
+
+What no-arbitrage property is violated? What spread position would you
+use to effect arbitrage? Demonstrate that the spread position is an
+arbitrage?
+
+\textbf{9.10} Suppose call and put prices are given by
+
+\begin{longtable}[]{@{}lrrr@{}}
+\toprule\noalign{}
+\textbf{Strike} & \textbf{\(50\)} & \textbf{\(55\)} & \textbf{\(60\)} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Call premium & 18 & 14 & 9.50 \\
+Put premium & 7 & 10.75 & 14.45 \\
+\end{longtable}
+
+Find the convexity violations. What spread would you use to effect
+arbitrage? Demonstrate that the spread position is an arbitrage?
+
+\textbf{9.12} In each case identify the arbitrage and demonstrate how
+you would make money by creating a table showing your payoff.
+
+\begin{itemize}
+\item
+  \textbf{a.} Consider two European options on the same stock with the
+  same time to expiration. The \(90\)-strike call costs \(\$10\) and the
+  \(\95\)-strike call costs \(\$4\).
+\item
+  \textbf{b.} Now suppose these options have \(2\) years to expiration
+  and the continously compounded interest rate is \(10\%\). The
+  \(90\)-strike call costs \(\$10\) and the \(95\)-strike call costs
+  \(\$5.25\). Show again that there is an arbitrage opportunity.
+  (\textbf{Hint:} It is important in this case that the options are
+  European.)
+\item
+  \textbf{c.} Suppose that a \(90\)-strike European call sells for
+  \(\$15\), a \(100\)-strike call sells for \(\$10\), and a
+  \(105\)-strike calls sells for \(\$6\). Show how you could use an
+  asymmetric butterfly to profit from this arbitrage opportunity.
+\end{itemize}
+
+\subsection{Chapter 10: Binomial Option Pricing -- Basic
+Concepts}\label{chapter-10-binomial-option-pricing-basic-concepts}
+
+\textbf{10.1} Let \(S = \$100\), \(K = \$105\), \(r = 8\%\),
+\(T = 0.5\), and \(\delta = 0\). Let \(u = 1.3\), \(d = 0.8\), and
+\(n = 1\).
+
+\begin{itemize}
+\item
+  \textbf{a.} What are the premium, \(\Delta\), and \(B\) for a European
+  call?
+\item
+  \textbf{b.} What are the premium, \(\Delta\), and \(B\) for a European
+  put?
+\end{itemize}
+
+\textbf{10.2} Let \(S = \$100\), \(K = \$95\), \(r = 8\%\), \(T = 0.5\),
+and \(\delta = 0\). Let \(u = 1.3\), \(d = 0.8\), and \(n = 1\).
+
+\begin{itemize}
+\item
+  \textbf{a.} Verify that the price of a European call is \(\$16.196\).
+\item
+  \textbf{b.} Suppose you observe a call price of \(\$17\). What is the
+  arbitrage?
+\item
+  \textbf{c.} Suppose you observe a call price of \(\$15.50\). What is
+  the arbitrage?
+\end{itemize}
+
+\textbf{10.3} Let \(S = \$100\), \(K = \$95\), \(r = 8\%\), \(T = 0.5\),
+and \(\delta = 0\). Let \(u = 1.3\), and \(d = 0.8\), and \(n = 1\).
+
+\begin{itemize}
+\item
+  \textbf{a.} Verify that the price of a European put is \(\$7.471\).
+\item
+  \textbf{b.} Suppose you observe a put price of \(\$8\). What is the
+  arbitrage?
+\item
+  \textbf{c.} Suppose you observe a put price of \(\$6\). What is the
+  arbitrage?
+\end{itemize}
+
+\textbf{10.4} Obtain at least \(5\) years' worth of daily stock price
+data for a stock of your choice.
+
+\begin{itemize}
+\item
+  \textbf{1.} Compute annual volatility using all the data.
+\item
+  \textbf{2.} Compute annual volatility for each calendar year in your
+  data. How does volatility vary over time?
+\item
+  \textbf{3.} Compute annual volatility for the first and second half of
+  each year in your data. How much variation is there in your estimate?
+\end{itemize}
+
+\textbf{10.5} Obtain at least \(10\) years of daily data for five
+stocks. Estimate annual volatility for each year for each asset in your
+data. What do you observe about the pattern of historical volatility
+over time? Does historical volatility move in tandem for different
+assets?
+
+\textbf{10.6} Let \(S = \$100\), \(K = \$95\), \(\sigma = 30\%\),
+\(r = 8\%\), \(T = 1\), and \(\delta = 0\). Let \(u = 1.3\),
+\(d = 0.8\), and \(n = 2\). Construct the binomial tree for a call
+option. At each node provide the premium, \(\Delta\), and \(B\).
+
+\textbf{10.8} Let \(S = \$100\), \(K = \$95\), \(\sigma = 30\%\),
+\(r = 8\%\), \(T = 1\), and \(\delta = 0\). Let \(u = 1.3\),
+\(d = 0.8\), and \(n = 2\). Construct the binomial tree for a European
+put option. At each node provide the premium, \(\Delta\), and \(B\).
+
+\textbf{10.10} Let \(S = \$100\), \(K = \$95\), \(\sigma = 30\%\),
+\(r = 8\%\), \(T = 1\), and \(\delta = 0\). Let \(u = 1.3\),
+\(d = 0.8\), and \(n = 2\). Construct the binomial tree for an American
+put option. At each node provide the premium, \(\Delta\), and \(B\).
+
+\textbf{10.11} Suppose \(S_{0} = \$100\), \(K = \$50\), \(r = 7.696\%\)
+(continuously compounded), \(\delta = 0\), and \(T = 1\).
+
+\begin{itemize}
+\item
+  \textbf{a.} Suppose that for \(h = 1\), we have \(u = 1.2\) and
+  \(d = 1.05\). What is the binomial option price for a call option that
+  lives one period? Is there any problem with having \(d > 1\)?
+\item
+  \textbf{b.} Suppose now that \(u = 1.4\) and \(d = 0.6\). Before
+  computing the option price, what is your guess about how it will
+  change from your previous answer? Does it change? How do you account
+  for the result? Interpret your answer using put-call parity.
+\item
+  \textbf{c.} Now let \(u = 1.4\) and \(d = 0.4\). How do you think the
+  call option price will change from (a)? How does it change? How do you
+  account for this? Use put-call parity to explain your answer.
+\end{itemize}
+
+\textbf{10.12} Let \(S = \$100\), \(K = \$95\), \(r = 8\%\) (continously
+compounded), \(\sigma = 30\%\), \(\delta = 0\), \(T = 1\) year, and
+\(n = 3\).
+
+\begin{itemize}
+\item
+  \textbf{a.} Verify that the binomial option price for an American call
+  option is \(\$18.283\). Verify that there is never early exercise;
+  hence, a European call would have the same price.
+\item
+  \textbf{b.} Show that the binomial option price for European put
+  option is \(\$5.979\). Verify that put-call parity is satisfied.
+\item
+  \textbf{c.} Verify that the price of an American put is \(\$6.678\).
+\end{itemize}
+
+\textbf{10.21} For a stock index, \(S = \$100\), \(\sigma = 30\%\),
+\(r = 5\%\), \(\delta = 3\%\), and \(T = 3\). Let \(n = 3\).
+
+\begin{itemize}
+\item
+  \textbf{a.} What is the price of a European call option with a strike
+  of \(\$95\)?
+\item
+  \textbf{b.} What is the price of a European put option with a strike
+  of \(\$95\).
+\item
+  \textbf{c.} Now let \(S = \$95\), \(K = \$100\), \(\sigma = 30\%\),
+  \(r = 3\%\), and \(\delta = 5\%\). (You have exchanged values for the
+  stock price and strike price and for the interest rate and dividend
+  yield.) Value both options again. What do you notice?
+\end{itemize}
+
+\textbf{10.22} Repeat the previous problem calculating prices for
+American options instead of European. What happens?
+
+\subsection{Chapter 11: Binomial Option Pricing -- Selected
+Topics}\label{chapter-11-binomial-option-pricing-selected-topics}
+
+For the following problems write three functions in Python:
+\texttt{call\_payoff}, \texttt{put\_payoff}, and \texttt{binomial}. The
+first two functions are to calculate the payoff to plain vanilla call
+and put options. The third function is to calculate the option premium,
+\(\Delta\), and \(B\) for a given pricing problem. Use these functions
+for any of the problems below for which \(n \gt 3\).
+
+\textbf{11.1} Consider a one-period binomial model with \(h = 1\), where
+\(S = \$100\), \(r = 0\), \(\sigma = 30\%\), and \(\delta = 0.08\).
+Compute American call options for \(K = \$70, \$80, \$90\), and
+\(\$100\).
+
+\begin{itemize}
+\item
+  \textbf{a.} At which strike(s) does early exercise occur?
+\item
+  \textbf{b.} Use put-call parity to explain why early exercise does not
+  occur at the higher strikes.
+\item
+  \textbf{c.} Use put-call parity to explain why early exercise is sure
+  to occur for all lower strikes than that in your answer to (a).
+\end{itemize}
+
+\textbf{11.4} Consider a one-period binomial model with \(h = 1\), where
+\(S = \$100\), \(r = 0.08\), \(\sigma = 30\%\), and \(\delta = 0\).
+Compute American put option prices for \(K = \$100, \$110, \$120\), and
+\(\$130\).
+
+\begin{itemize}
+\item
+  \textbf{a.} At which strike(s) does early exercise occur?
+\item
+  \textbf{b.} Use put-call parity to explain why early exercise is sure
+  to occur for all strikes greater than that in your answer to (a).
+\end{itemize}
+
+\textbf{11.5} Repeat Problem 11.4, only set \(\delta = 0.08\). What is
+the lowest strike price at which early exercise will occur? What
+condition related to put-call parity is satisfied at this strike price?
+
+\textbf{11.7} Let \(S = \$100\), \(K = \$100\), \(\sigma = 30\%\),
+\(r = 0.08\), \(t = 1\), and \(\delta = 0\). Let \(n = 10\). Suppose the
+stock has an expected return of \(15\%\).
+
+\begin{itemize}
+\item
+  \textbf{a.} What is the expected return on a European call option? A
+  European put option?
+\item
+  \textbf{b.} What happens to the expected return if you increase the
+  volatility to \(50\%\)?
+\end{itemize}
+
+\textbf{11.8} Let \(S = \$100\), \(\sigma = 30\%\), \(r = 0.08\),
+\(t = 1\), and \(\delta = 0\). Suppose the true expected return on the
+stock is \(15\%\). Set \(n = 10\). Compute European call prices,
+\(\Delta\), and \(B\) for strikes of
+\(\$70, \$80, \$90, \$100, \$110, \$120\), and \(\$130\). For each
+strike, compute the expected return on the option. What effect does the
+strike have on the option's expected return?
+
+\textbf{11.9} Repeat the previous problem, except that for each strike
+price, compute the expected return on the option for times to expiration
+of \(3\) months, \(6\) months, \(1\) year, and \(2\) years. What effect
+does time to maturity have on the option's expected return?
+
+\textbf{11.10} Let \(S = \$100\), \(\sigma = 30\%\), \(r = 0.08\),
+\(t = 1\), and \(\delta = 0\). Suppose the true expected return on the
+stock is \(15\%\). Set \(n = 10\). Compute European put prices,
+\(\Delta\), and \(B\) for strikes of
+\(\$70, \$80, \$90, \$100, \$110, \$120\), and \(\130\). For each
+strike, compute the expected return on the option. What effect does the
+strike have on the option's expected return?
+
+\textbf{11.11} Repeat the previous problem, except that for each strike
+price, compute the expected return on the option for times to expiration
+of \(3\) months, \$6\% months, \(1\) year, and \(2\) years. What effect
+does time to maturity have on the option's expected return?
+
+\textbf{11.12} Let \(S = \$100\), \(\sigma = 30\%\), \(r = 0.08\),
+\(t = 1\), and \(\delta = 0\). Using equation (11.12) to compute the
+probability of reaching a terminal node and \(Su^{i}d^{n-i}\) to compute
+the price at that node, plot the risk-neutral distribution of year-1
+stock prices as in Figures 11.7 and 11.8 for \(n = 3\) and \(n = 10\).
+
+\textbf{11.13} Repeat the previous problem for \(n = 50\). What is the
+risk-neutral probability that \(S_{1} < \$80\)? \(S_{1} < \$120\)?
+
+\textbf{11.14} We saw in Section 10.1 that the undiscounted risk-neutral
+expected stock price equals the forward price. We will verify this using
+the binomial tree in Figure 11.4.
+
+\begin{itemize}
+\item
+  \textbf{a.} Using \(S = \$100\), \(r = 0.08\), and \$\delta = 0.08,
+  what are the \(4\)-month, \(8\)-month, and \(1\)-year forward prices?
+\item
+  \textbf{b} Verify your answers in (a) by computing the risk-neutral
+  expected stock price in the first, second, and third binomial period.
+  Use equation (11.12) to determine the probability of reaching each
+  node.
+\end{itemize}
+
+\subsection{Bonus Problems}\label{bonus-problems}
+
+\textbf{1} Write a Python function to calculate the implied volatility
+using the binomial options pricing model. Obtain 1-year of historical
+daily stock price data and compute historical and implied volatilities
+using your function for at-the-money strike prices. Plot and compare the
+results.
+
+\textbf{2} Let \(S = \$41\), \(\sigma = 30\%\), \(r = 0.08\), \(t = 1\),
+and \(\delta = 0\). Simulate the delta-hedging process of the options
+market-maker on a daily basis for a written \(40\)-strike call option.
+Assume that the true expected rate of return on the stock is
+\(\mu = 15\%\).
+
+\begin{itemize}
+\item
+  \textbf{a.} Using the lognormal expressions for
+  \(u = e^{(\mu - \delta - 0.5\sigma^{2})h + \sigma \sqrt{h}}\) and
+  \(d = e^{(\mu - \delta - 0.5\sigma^{2})h - \sigma \sqrt{h}}\) and the
+  binomial process for the stock price data-generating mechanism.
+\item
+  \textbf{b.} Using geometric Brownian motion for the stock price
+  data-generating mechanism.
+\item
+  \textbf{c.} Using the stationary bootstrap and 1-year of history data
+  as your data-genterating mechanism.
+\end{itemize}
+
+Compare the respective end-of-period hedging payoffs in dollar terms.
+
+
+
+\end{document}
