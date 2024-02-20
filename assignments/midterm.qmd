@@ -1,6 +1,6 @@
 ---
-title: Binomial Option Pricing
-subtitle: "DATA 5695: Homework #1"
+title: "DATA 5695: Midterm - Part 1"
+subtitle: "Binomial Option Pricing"
 author: Dr. Tyler J. Brough
 date: February 6, 2024
 ---
@@ -65,12 +65,11 @@ Find the convexity violations. What spread would you use to effect arbitrage? De
 
 __9.12__ In each case identify the arbitrage and demonstrate how you would make money by creating a table showing your payoff.
 
-- __a.__ Consider two European options on the same stock with the same time to expiration. The $90$-strike call costs $\$10$ and the $\95$-strike call costs $\$4$.
+- __a.__ Consider two European options on the same stock with the same time to expiration. The $90$-strike call costs $\$10$ and the $95$-strike call costs $\$4$.
 
 - __b.__ Now suppose these options have $2$ years to expiration and the continously compounded interest rate is $10\%$. The $90$-strike call costs $\$10$ and the $95$-strike call costs $\$5.25$. Show again that there is an arbitrage opportunity. (__Hint:__ It is important in this case that the options are European.)
 
 - __c.__ Suppose that a $90$-strike European call sells for $\$15$, a $100$-strike call sells for $\$10$, and a $105$-strike calls sells for $\$6$. Show how you could use an asymmetric butterfly to profit from this arbitrage opportunity.
-
 
 ## Chapter 10: Binomial Option Pricing -- Basic Concepts
 
@@ -160,11 +159,9 @@ __10.21__ For a stock index, $S = \$100$, $\sigma = 30\%$, $r = 5\%$, $\delta = 
 
 __10.22__ Repeat the previous problem calculating prices for American options instead of European. What happens?
 
-
-
 ## Chapter 11: Binomial Option Pricing -- Selected Topics
 
-For the following problems write three functions in Python: `call_payoff`, `put_payoff`, and `binomial`. The first two functions are to calculate the payoff to plain vanilla call and put options. The third function is to calculate the option premium, $\Delta$, and $B$ for a given pricing problem. Use these functions for any of the problems below for which $n \gt 3$.
+For the following problems write three functions in Python: `call_payoff`, `put_payoff`, and `binomial`. The first two functions are to calculate the payoff to plain vanilla call and put options. The third function is to calculate the option premium, $\Delta$, and $B$ for a given pricing problem. Use these functions for any of the problems below for which $n > 3$.
 
 
 
@@ -200,12 +197,10 @@ __11.7__ Let $S = \$100$, $K = \$100$, $\sigma = 30\%$, $r = 0.08$, $t = 1$, and
 __11.8__ Let $S = \$100$, $\sigma = 30\%$, $r = 0.08$, $t = 1$, and $\delta = 0$. Suppose the true expected return on the stock is $15\%$. Set $n = 10$. Compute European call prices, $\Delta$, and $B$ for strikes of $\$70, \$80, \$90, \$100, \$110, \$120$, and $\$130$. For each strike, compute the expected return on the option. What effect does the strike have on the option's expected return?
 
 
-
 __11.9__ Repeat the previous problem, except that for each strike price, compute the expected return on the option for times to expiration of $3$ months, $6$ months, $1$ year, and $2$ years. What effect does time to maturity have on the option's expected return?
 
 
-__11.10__ Let $S = \$100$, $\sigma = 30\%$, $r = 0.08$, $t = 1$, and $\delta = 0$. Suppose the true expected return on the stock is $15\%$. Set $n = 10$. Compute European put prices, $\Delta$, and $B$ for strikes of $\$70, \$80, \$90, \$100, \$110, \$120$, and $\130$. For each strike, compute the expected return on the option. What effect does the strike have on the option's expected return?
-
+__11.10__ Let $S = \$100$, $\sigma = 30\%$, $r = 0.08$, $t = 1$, and $\delta = 0$. Suppose the true expected return on the stock is $15\%$. Set $n = 10$. Compute European put prices, $\Delta$, and $B$ for strikes of $\$70, \$80, \$90, \$100, \$110, \$120$, and $\$130$. For each strike, compute the expected return on the option. What effect does the strike have on the option's expected return?
 
 __11.11__ Repeat the previous problem, except that for each strike price, compute the expected return on the option for times to expiration of $3$ months, $6% months, $1$ year, and $2$ years. What effect does time to maturity have on the option's expected return?
 
@@ -221,9 +216,6 @@ __11.14__ We saw in Section 10.1 that the undiscounted risk-neutral expected sto
 - __a.__ Using $S = \$100$, $r = 0.08$, and $\delta = 0.08, what are the $4$-month, $8$-month, and $1$-year forward prices?
 
 - __b__ Verify your answers in (a) by computing the risk-neutral expected stock price in the first, second, and third binomial period. Use equation (11.12) to determine the probability of reaching each node.
-
-
-
 
 ## Bonus Problems
 
