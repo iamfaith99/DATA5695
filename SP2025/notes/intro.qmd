@@ -9,3 +9,14 @@ See @knuth84 for additional discussion of literate programming.
 - Start with MGRM case study.
 
 - ***Start with Bayes***
+
+- Financial background 
+  - Brandimarte Chapter 2
+  - Hull Chapters 2,3 
+
+\newpage 
+
+## References 
+
+::: {#refs}
+:::
