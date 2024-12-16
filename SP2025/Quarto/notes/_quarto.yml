@@ -1,0 +1,54 @@
+project:
+  type: book
+
+jupyter: python3
+
+book:
+  title:    "DATA 5695 Class Notes"
+  subtitle: "Predictive Methods for FinTech"
+  author:   "Dr. Tyler J. Brough"
+  date:     "12/13/2024"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - part: part_one.qmd
+      chapters: 
+        - political_economy_of_fintech.qmd
+        - mgrm_historical.qmd
+    - part: part_two.qmd
+      chapters:
+        - tvm_basics.qmd
+        - derivatives_basics.qmd
+        - forwards_and_futures.qmd
+        - futures_mechanics.qmd
+        - commodity_market_basics.qmd
+    - part: part_three.qmd
+      chapters:
+        - decision_theory_basics.qmd
+        - bayesian_theory_basics.qmd
+    - part: part_four.qmd
+      chapters:
+        - economic_forecasting.qmd
+        - stylized_facts.qmd
+        - time_series_basics.qmd
+        - cointegration.qmd
+        - garch.qmd
+        - exercise.qmd
+    - part: part_five.qmd
+      chapters:
+        - final.qmd
+    - part: appendices.qmd
+      chapters:
+        - appendix_a.qmd
+        - appendix_b.qmd
+        - appendix_c.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrbook
+    include-in-header: custom.tex
