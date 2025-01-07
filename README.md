@@ -51,6 +51,8 @@ In a seminar style course it is essential that you come prepared having complete
 If any of the concepts in McDonald Chapter 9 seem pretty foreign, you might want to take a look at the introduction in Chapter 2:
 
 - [McDonald Chapter 2 -- An Introduction to Forwards and Options](https://usu.app.box.com/file/1743804304514)
+- [McDonald Appendix A -- The Greek Alphabet](https://usu.app.box.com/file/1743815324580)
+- [McDonald Appendix B -- Continuous Compounding](https://usu.app.box.com/file/1743813357112)
 
 #### Week 2: Binomial Option Pricing 
 
