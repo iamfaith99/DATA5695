@@ -48,11 +48,13 @@ In a seminar style course it is essential that you come prepared having complete
   - [Brandimarte Chapter 2 Section 2.6 -- Derivatives Pricing](https://usu.app.box.com/file/1743630102019)
   - [McDonald Chapter 9 -- Parity and Other Option Relationships](https://usu.app.box.com/file/1743588462692)
 
-If any of the concepts in McDonald Chapter 9 seem pretty foreign, you might want to take a look at the introduction in Chapter 2:
-
+- If any of the concepts in McDonald Chapter 9 seem pretty foreign, you might want to take a look at the introduction in Chapter 2:
 - [McDonald Chapter 2 -- An Introduction to Forwards and Options](https://usu.app.box.com/file/1743804304514)
 - [McDonald Appendix A -- The Greek Alphabet](https://usu.app.box.com/file/1743815324580)
 - [McDonald Appendix B -- Continuous Compounding](https://usu.app.box.com/file/1743813357112)
+
+- Notebooks:
+  - [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/broughtj/DATA5695/main/Notebooks/Week1.ipynb)
 
 #### Week 2: Binomial Option Pricing 
 
