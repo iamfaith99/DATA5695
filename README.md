@@ -27,7 +27,6 @@ We will be working from several sources, but primarily from the following:
 
 In a seminar style course it is essential that you come prepared having completed readings and with burning questions to discuss. We will rely on the Socratic method for our discussions. 
 
-
 ### Computational Projects (50%)
 
 - Project 0: Price vanilla call/put options via binomial model (Black-Scholes-Merton) 
@@ -44,8 +43,9 @@ In a seminar style course it is essential that you come prepared having complete
 - Jan. 7: Welcome & discuss Figlewski case study 
 - Jan. 9: Options primer (Tyler) 
 - Readings:
-  - [Ross New Palgrave]()
+  - [Steve Ross -- Finance, pp. 1--34](https://usu.app.box.com/file/1743638968317)
   - [Figlewski JF 1989](https://usu.box.com/s/w7isz919owp6w21wz1esekv97efior5o)
+  - [Brandimarte Chapter 2 Section 2.6 -- Derivatives Pricing](https://usu.app.box.com/file/1743630102019)
   - [McDonald Chapter 9 -- Parity and Other Option Relationships](https://usu.app.box.com/file/1743588462692)
 
 #### Week 2: Binomial Option Pricing 
@@ -64,10 +64,14 @@ In a seminar style course it is essential that you come prepared having complete
   - [McDonald Chapter 12 -- The Black-Scholes Formula](https://usu.app.box.com/file/1743605999526)
   - [McDonald Chapter 13 -- Market-Making and Delta-Hedging](https://usu.app.box.com/file/1743591119897)
 
-#### Week 4: Risk-Neutral Monte Carlo and Exotic Options
+#### Week 4: Pseudorandom Number Generation and Monte Carlo Integration
 
-- Jan. 28: 
-- Jan. 30:  
+- Jan. 28: PRNGs and Monte Carlo Integration (Tyler) 
+- Jan. 30: Exotic and path-dependent options (Tyler) 
+- Readings:
+  - [Brandimarte Chapter 4.2 -- 4.4](https://usu.app.box.com/file/1743642602282)
+  - [Brandimarte Chapter 2.7](https://usu.app.box.com/file/1743630102019)
+  - [McDonald Chapter 14](https://usu.app.box.com/file/1743598729925)
 
 #### Week 5 
 
