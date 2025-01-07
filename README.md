@@ -48,6 +48,10 @@ In a seminar style course it is essential that you come prepared having complete
   - [Brandimarte Chapter 2 Section 2.6 -- Derivatives Pricing](https://usu.app.box.com/file/1743630102019)
   - [McDonald Chapter 9 -- Parity and Other Option Relationships](https://usu.app.box.com/file/1743588462692)
 
+If any of the concepts in McDonald Chapter 9 seem pretty foreign, you might want to take a look at the introduction in Chapter 2:
+
+- [McDonald Chapter 2 -- An Introduction to Forwards and Options](https://usu.app.box.com/file/1743804304514)
+
 #### Week 2: Binomial Option Pricing 
 
 - Jan. 14: Binomial option pricing -- Part 1 (Tyler)
