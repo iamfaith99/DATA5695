@@ -73,20 +73,23 @@ In a seminar style course it is essential that you come prepared having complete
   - [Brandimarte Chapter 2.7](https://usu.app.box.com/file/1743630102019)
   - [McDonald Chapter 14 -- Exotic Options: I](https://usu.app.box.com/file/1743598729925)
 
-#### Week 5 
+#### Week 5: Risk-Neutral Option Pricing 
 
-- 09 02.04.2025.TUE
-- 10 02.06.2025.THU
+- Feb. 4: Risk-neutral Monte Carlo option pricing (Tyler) 
+- Feb. 6: Variance reduction techniques (Tyler) 
+- Readings:
+  - [Brandimarte Chapter 8 -- Option Pricing by Monte Carlo Methods](https://usu.app.box.com/file/1743631787016)
+  - [McDonald Chapter 19 -- Monte Carlo Valuation](https://usu.app.box.com/file/1743696781732)
 
 #### Week 6 
 
-- 11 02.11.2025.TUE
-- 12 02.13.2025.THU
+- Feb. 11: 
+- Feb. 13: 
 
 #### Week 7 
 
-- 13 02.18.2025.TUE
-- 14 02.20.2025.THU
+- Feb. 18: 
+- Feb. 20: 
 
 #### Week 8 
 
