@@ -71,7 +71,7 @@ In a seminar style course it is essential that you come prepared having complete
 - Readings:
   - [Brandimarte Chapter 4.2 -- 4.4](https://usu.app.box.com/file/1743642602282)
   - [Brandimarte Chapter 2.7](https://usu.app.box.com/file/1743630102019)
-  - [McDonald Chapter 14](https://usu.app.box.com/file/1743598729925)
+  - [McDonald Chapter 14 -- Exotic Options: I](https://usu.app.box.com/file/1743598729925)
 
 #### Week 5 
 
