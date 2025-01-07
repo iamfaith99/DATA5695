@@ -9,13 +9,23 @@
 
 ## Course Description 
 
-Jikity jike jike ...
+This semester this course will cover the material typically covered in DATA 5690/6690 Computational Methods in FinTech. Here is the standard description for that course: 
+
+Computational finance is an interdisciplinary pillar of modern FinTech, at the intersection of data science, computer science, and economics. In this course students apply tools from computational science and statistics to identify and exploit arbitrage opportunities for entrepreneurial financial innovation. We will view the core concepts of the course through the perspectives of history, philosophy, and economic theory.  
+
+## Course Material
+
+We will be working from several sources, but primarily from the following: 
+
+- [Derivatives Markets 3rd Edition](https://www.pearson.com/en-us/subject-catalog/p/derivatives-markets/P200000005976/9780137612864) by Robert McDonald
+- [Numerical Methods in Finance and Economics](https://onlinelibrary.wiley.com/doi/book/10.1002/0470080493) by Paolo Brandimarte 
+
 
 ## Assessment 
 
 ### Participation (50%)
 
-
+In a seminar style course it is essential that you come prepared having completed readings and with burning questions to discuss. We will rely on the Socratic method for our discussions. 
 
 
 ### Computational Projects (50%)
@@ -27,28 +37,37 @@ Jikity jike jike ...
 
 ## Schedule 
 
+### Module 1: Risk-Neutral Pricing
+
 #### Week 1: An Primer on Option Basics
 
 - Jan. 7: Welcome & discuss Figlewski case study 
 - Jan. 9: Options primer (Tyler) 
 - Readings:
+  - [Ross New Palgrave]()
   - [Figlewski JF 1989](https://usu.box.com/s/w7isz919owp6w21wz1esekv97efior5o)
   - [McDonald Chapter 9 -- Parity and Other Option Relationships](https://usu.app.box.com/file/1743588462692)
 
-#### Week 2: 
+#### Week 2: Binomial Option Pricing 
 
-- 03 01.14.2025.TUE
-- 04 01.16.2025.THU
+- Jan. 14: Binomial option pricing -- Part 1 (Tyler)
+- Jan. 16: Binomial option pricing -- Part 2 (Tyler)
+- Readings:
+  - [McDonald Chapter 10 -- Binomial Option Pricing: Basic Concepts](https://usu.app.box.com/file/1743602073176)
+  - [McDonald Chapter 11 -- Binomial Option Pricing: Selected Topics](https://usu.app.box.com/file/1743589115485)
 
-#### Week 3
+#### Week 3: Black-Scholes-Merton
 
-- 05 01.21.2025.TUE
-- 06 01.23.2025.THU
+- Jan. 21: Black-Scholes-Merton  (Tyler)
+- Jan. 23: Delta-Hedging (Tyler)
+- Readings:
+  - [McDonald Chapter 12 -- The Black-Scholes Formula](https://usu.app.box.com/file/1743605999526)
+  - [McDonald Chapter 13 -- Market-Making and Delta-Hedging](https://usu.app.box.com/file/1743591119897)
 
-#### Week 4
+#### Week 4: Risk-Neutral Monte Carlo and Exotic Options
 
-- 07 01.28.2025.TUE
-- 08 01.30.2025.THU
+- Jan. 28: 
+- Jan. 30:  
 
 #### Week 5 
 
