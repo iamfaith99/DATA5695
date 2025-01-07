@@ -43,7 +43,7 @@ In a seminar style course it is essential that you come prepared having complete
 - Jan. 7: Welcome & discuss Figlewski case study 
 - Jan. 9: Options primer (Tyler) 
 - Readings:
-  - [Steve Ross -- Finance, pp. 1--34](https://usu.app.box.com/file/1743638968317)
+  - [Stephen Ross -- Finance, pp. 1--34](https://usu.app.box.com/file/1743638968317)
   - [Figlewski JF 1989](https://usu.box.com/s/w7isz919owp6w21wz1esekv97efior5o)
   - [Brandimarte Chapter 2 Section 2.6 -- Derivatives Pricing](https://usu.app.box.com/file/1743630102019)
   - [McDonald Chapter 9 -- Parity and Other Option Relationships](https://usu.app.box.com/file/1743588462692)
@@ -81,10 +81,13 @@ In a seminar style course it is essential that you come prepared having complete
   - [Brandimarte Chapter 8 -- Option Pricing by Monte Carlo Methods](https://usu.app.box.com/file/1743631787016)
   - [McDonald Chapter 19 -- Monte Carlo Valuation](https://usu.app.box.com/file/1743696781732)
 
-#### Week 6 
+#### Week 6: Longstaff-Schwartz (LSM) for American Options
 
-- Feb. 11: 
-- Feb. 13: 
+- Feb. 11: Dynamic programming, search, optimal stopping 
+- Feb. 13: LSM 
+- Readings: 
+  - [Brandimarte Chapter 10 -- Dynamic Programming](https://usu.app.box.com/file/1743716691968)
+
 
 #### Week 7 
 
