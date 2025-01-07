@@ -54,7 +54,7 @@ In a seminar style course it is essential that you come prepared having complete
 - [McDonald Appendix B -- Continuous Compounding](https://usu.app.box.com/file/1743813357112)
 
 - Notebooks:
-  - [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/broughtj/DATA5695/main/Notebooks/Week1.ipynb)
+  - [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/broughtj/DATA5695/blob/main/Notebooks/Week1.ipynb)
 
 #### Week 2: Binomial Option Pricing 
 
