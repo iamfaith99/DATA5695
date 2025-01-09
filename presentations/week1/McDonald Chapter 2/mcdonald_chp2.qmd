@@ -1,7 +1,8 @@
 ---
-title: DATA 5695/6695 -- Week 1
+title: An Introduction to Forwards and Options
 subtitle: |
-  | An Options Primer 
+  | McDonald Chapter 2
+  | DATA 5695/6695
 author: Tyler J. Brough
 date: 2025-01-09
 title-slide-attributes:

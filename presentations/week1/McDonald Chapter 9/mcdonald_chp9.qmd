@@ -1,6 +1,7 @@
 ---
 title: Parity and Other Option Relationships 
 subtitle: |
+  | McDonald Chapter 9
   | DATA 5695/6695 
 author: Tyler J. Brough
 date: 2025-01-09
