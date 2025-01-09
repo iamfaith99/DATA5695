@@ -1,0 +1,72 @@
+---
+title: 'DATA 5695/6695 Week 1 Notebook'
+jupyter: python3
+---
+
+# Python Imports 
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+
+# McDonald Chapter 2: An Introduction to Forwards and Options
+
+## 2.1 Forward Contracts
+
+This section is about *forward contracts*
+
+### The Payoff on a Forward Contract 
+
+
+### Graphing the Payoff on a Forward Contract 
+
+
+### Comparing a Forward and Outright Purchase 
+
+
+### Cash Settlement Versus Delivery 
+
+
+### Credit Risk 
+
+
+## 2.2 Call Options 
+
+This section is about *call options* 
+
+### Option Terminology 
+
+- **Strike price** (**exercise price**): 
+
+- **Exercise**: 
+
+- **Expiration**: 
+
+- **Exercise Style**:  
+
+
+### Payoff and Profit for a Purchased Call Option 
+
+
+### Payoff and Profit for a Written Call Option 
+
+
+## 2.3 Put Options 
+
+This section is about *put options* 
+
+### Payoff and Profit for a Purchased Put Option 
+
+
+### Payoff and Profit for a Written Put Option 
+
+
+### The "Moneyness" of an Option
+
+
+
+## 2.4 Summary of Forward and Option Positions 
+
+

@@ -49,12 +49,10 @@ In a seminar style course it is essential that you come prepared having complete
   - [McDonald Chapter 9 -- Parity and Other Option Relationships](https://usu.app.box.com/file/1743588462692)
 
 - If any of the concepts in McDonald Chapter 9 seem pretty foreign, you might want to take a look at the introduction in Chapter 2:
-- [McDonald Chapter 2 -- An Introduction to Forwards and Options](https://usu.app.box.com/file/1743804304514)
-- [McDonald Appendix A -- The Greek Alphabet](https://usu.app.box.com/file/1743815324580)
-- [McDonald Appendix B -- Continuous Compounding](https://usu.app.box.com/file/1743813357112)
+  - [McDonald Chapter 2 -- An Introduction to Forwards and Options](https://usu.app.box.com/file/1743804304514)
+  - [McDonald Appendix A -- The Greek Alphabet](https://usu.app.box.com/file/1743815324580)
+  - [McDonald Appendix B -- Continuous Compounding](https://usu.app.box.com/file/1743813357112)
 
-- Notebooks:
-  - [Week 1 ![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/broughtj/DATA5695/blob/main/Notebooks/Week1.ipynb)
 
 #### Week 2: Binomial Option Pricing 
 

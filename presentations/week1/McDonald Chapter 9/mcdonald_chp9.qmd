@@ -1,0 +1,341 @@
+---
+title: Parity and Other Option Relationships 
+subtitle: |
+  | DATA 5695/6695 
+author: Tyler J. Brough
+date: 2025-01-09
+title-slide-attributes:
+  data-background-color: "#486790"
+format: 
+  revealjs:
+    theme: tjb.scss      # Modified simple theme.
+    slide-number: c/t    # Numbered slides current/total.
+    self-contained: true # Render to a single HTML file.
+execute:
+  eval: false
+  echo: true
+---
+
+
+# 9.1 Put-Call Parity
+
+## IBM Options Quotes
+
+<br>
+
+<center>
+<img src="images/Table9-1.png" alt="Table9-1">
+</center>
+
+## Put-Call Parity
+
+<br>
+
+
+* Put-call parity is the single most important relationship among option prices
+
+* The basic relationship for European options is
+
+$$\begin{eqnarray}
+C(K,T) - P(K,T) &=& PV_{0,T}(F_{0,T} - K) \\
+                &=& e^{-rT} (F_{0,T} - K)
+\end{eqnarray}$$
+
+* $C(K,T)$ is the price of a European call with strike price $K$ and time to expiry $T$
+
+
+* $P(K,T)$ is the price of a European put with strike price $K$ and time to expiry $T$
+
+
+* NB: $e^{-rT} F_{0,T}$ is the prepaid forward price and $e^{-rT} K$ is the prepaid forward 
+  price for the strike, so we can think of parity in terms of prepaid forward prices
+  
+<br>
+
+## Put-Call Parity Continued
+
+<br>
+
+* Intuition: buying a call and selling a put with strike price equal to the forward price $(F_{0,T} = K)$
+  creates a synthetic forward contract, hence must have zero price
+  
+  
+* A synthetic long forward position at a price lower than the forward price will cost $PV_{0,T}(F_{0,T} - K)$
+  since this is the benefit of buying the asset at the strike price rather than the forward price
+
+
+* Parity generally fails for American-style options, which may be exercised prior to maturity
+
+
+* There are some general parity bounds for American options (see Appendix 9.A)
+
+<br>
+
+## Options on Stock
+
+<br>
+
+* The parity relation for options on stock is 
+
+$$
+C(K,T) = P(K,T) + [S_{0} - PV_{0,T}(Div)] - e^{-rT}K
+$$
+
+<br>
+
+* NB: $S_{0}$ is the current spot price of the stock, and $DIV$ is the stream of dividends paid on the stock
+
+
+* For index options we can write
+
+$$
+C(K,T) = P(K,T) + S_{0}e^{-\delta T} - e^{-rT}K
+$$
+
+<br>
+
+## Example 9.1
+
+<br>
+
+Suppose the following:
+
+* the price of a non-dividend-paying stock is $\$40$
+
+
+* the continuously compounded interest rate is $8\%$
+
+
+* the options have an expiry of 3 months
+
+
+* A $40$-strike European call sells for $\$2.78$ and a $40$-strike European put sells for $\$1.99$
+
+
+* This is confirmed by put-call parity
+
+
+$$
+\$2.78 = \$1.99 + \$40 - \$40e^{-0.08 \times 0.25}
+$$
+  
+<br>
+
+## Example 9.2
+
+<br>
+
+Make the same assumptions as in Example 9.1 except that the stock pays a $\$5$ dividend just prior to expiration
+
+* The European call option is $\$0.74$ 
+
+
+* The European put option is $\$4.85$
+
+
+These prices satisfy put-call parity for a stock with dividends
+
+
+$$
+\$0.74 - \$4.85 = (\$40 - \$5e^{-0.08 \times 0.25}) - \$40e^{-0.08 \times 0.25}
+$$
+
+
+<br>
+
+## Synthetic Stock
+
+<br>
+
+* Given the parity relationship, we have a cookbook for the synthetic creations of options, stocks, and T-bills
+
+
+* Solving for the stock price we have
+
+
+$$
+S_{0} = C(K,T) - P(K,T) + PV_{0,T}(Div) + e^{-rT}K
+$$
+
+
+* Buying the call, selling the put, and lending the present value of the strike and dividends synthetically
+  replicates the stock 
+
+<br>
+
+## Synthetic T-bills
+
+<br>
+
+* If we buy the stock, sell the call, and buy the put, we have purchased the stock and short-sold the 
+  synthetic stock
+  
+* This transaction gives us a hedged position with zero risk
+
+
+* It did, however, require initial investment
+
+
+* Parity shows the following: 
+
+
+$$
+S_{0} + P(K,T) - C(K,T) = PV_{0,T}(K) + PV_{0,T}(Div)
+$$
+
+
+* This position costs $PV_{0,T}(K) + PV_{0,T}(Div)$ and pays $K + FV_{0,T}(Div)$ at expiry
+
+
+* This is a synthetic T-bill (called a conversion)
+
+
+* Likewise we can create a short T-bill position (called a reverse conversion)
+
+<br>
+
+## Synthetic Options
+
+<br>
+
+* Parity tells us that
+
+$$
+C(K,T) = S_{0} - PV_{0,T}(Div) - PV_{0,T}(K) + P(K,T)
+$$
+
+* And also that
+
+$$
+P(K,T) = C(K,T) - S_{0} + PV_{0,T}(Div) + PV_{0,T}(K) + 
+$$
+
+<br>
+
+* This gives us a hint about how to statically hedge an option 
+
+<br>
+
+# 9.3 Comparing Options with Respect to Style, Maturity, and Strike
+
+## European versus American Options
+
+
+* Since an American option can be exercised at anytime, whereas a European option can only be exercised at
+  expiration, an American option must always be at least as valuable as an otherwise identical European option
+      
+<br>
+
+$$
+\begin{align}
+C_{Amer}(S,K,T) & \ge C_{Eur}(S,K,T) \\
+P_{Amer}(S,K,T) & \ge P_{Eur}(S,K,T) 
+\end{align}
+$$
+
+<br>
+
+## Maximum and Minimum Option Prices
+
+- Call price cannot
+    + be negative
+    + exceed stock price
+    + be less than price implied by put-call parity using zero 
+      for put price: 
+          
+$$
+S > C_{Amer}(S,K,T) \ge C_{Eur}(S,K,T) \ge \max{[0, PV_{0,T}(F_{0,T}) - PV_{0,T}(K)]}
+$$
+
+<br>
+
+- Put price cannot
+    + be more then the strike price
+    + be less than price implied by put-call parity using zero for
+      put price
+          
+$$
+K > P_{Amer}(S,K,T) \ge P_{Eur}(S,K,T) \ge \max{[0, PV_{0,T}(K) - PV_{0,T}(F_{0,T})]}
+$$
+
+<br>
+
+## Early Exercise for American Options
+
+- An American call option on a non-dividend-paying stock should
+  not be exercised early, because
+  
+$$
+C_{Amer} \ge C_{Eur} \ge S_{T} - K
+$$
+
+- That means, one would lose money by exercising early instead of
+  selling the option
+  
+- If there are dividends, it may be optimal to exercise early, just
+  prior to a dividend
+  
+- It may be optimal to exercise a non-dividend-paying put option early
+  if the underlying stock price is sufficiently low
+
+## Time to Expiration
+
+- An American option (both put and call) with more time to expiration
+  is at least as valuable as an American option with less time to
+  expiration. This is because the longer option can easily be
+  converted into a shorter option by exercising it early
+  
+- A European call option on a non-dividend-paying stock will be more
+  valuable than an otherwise identical option with less time to 
+  expiration
+  
+- European call options on dividend-paying stock and European puts
+  may be less valuable than an otherwise identical option with less
+  time to expiration
+  
+- When the strike price grows at the rate of interest, European
+  call and put prices on a non-dividend-paying stock increases
+  with time to maturity
+
+## Different Strike Prices
+
+Different strike prices $(K_{1} < K_{2} < K_{3})$, for both European and American options
+
+
+- A call with a low strike price is at least as valuable as an
+  otherwise identical call with a higher strike price. $C(K_{1}) \ge
+  C(K_{2})$
+  
+  
+- A put with a high strike price is at least as valuable as an 
+  otherwise identical put with a lower strike price. $P(K_{2}) \ge
+  P(K_{1})$
+  
+  
+- The premium difference between otherwise identical calls with 
+  different strike prices cannot be greater than the difference
+  in strike prices. $C(K_{1}) - C(K_{2}) \le K_{2} - K_{1}$
+  
+<br>
+
+## Different Strike Prices Continued
+
+<br>
+
+Different strike prices $(K_{1} < K_{2} < K_{3})$, for both European and American options
+
+- The premium difference between otherwise identical puts with
+  different strike prices cannot be greater than the difference
+  in strike prices. $P(K_{1}) - P(K_{2}) \le K_{2} - K_{1}$
+  
+  
+- Premiums decline at a decreasing rate for calls with progressively
+  higher strike prices. (Convexity of option price with respect
+  to strike price)
+  
+$$
+\frac{C(K_{1}) - C(K_{2})}{K_{2} - K_{1}} \le \frac{C(K_{2}) - C(K_{3})}{K_{3} - K_{2}}
+$$
+
+<br>
+
