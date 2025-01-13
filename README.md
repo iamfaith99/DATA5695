@@ -56,6 +56,8 @@ In a seminar style course it is essential that you come prepared having complete
 
 #### Week 2: Binomial Option Pricing 
 
+- [Week 1](./assignments/week1.md) homework assignment. Due by 01/21/2025. 
+
 - Jan. 14: Binomial option pricing -- Part 1 (Tyler)
 - Jan. 16: Binomial option pricing -- Part 2 (Tyler)
 - Readings:
