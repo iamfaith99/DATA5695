@@ -1,0 +1,852 @@
+---
+title: "Chapter 2 and 9 Solutions"
+format:
+  html:
+    code-fold: false
+    fig-width: 8
+    fig-height: 6
+    fig-dpi: 300
+    fig-format: png
+---
+
+```{python}
+#| label: setup
+#| include: false
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def set_plot_style():
+    plt.style.use('default')  # Using default style instead of seaborn
+    plt.rcParams['figure.figsize'] = [8, 6]
+    plt.rcParams['figure.dpi'] = 300
+    plt.rcParams['figure.constrained_layout.use'] = True
+    plt.rcParams['axes.grid'] = True
+    plt.rcParams['axes.axisbelow'] = True
+    plt.rcParams['grid.linestyle'] = '--'
+    plt.rcParams['grid.alpha'] = 0.5
+
+set_plot_style()
+```
+
+## Problem 2.1: Long Stock Position
+
+A long position in XYZ stock with initial price $50 and 10% interest rate:
+
+```{python}
+#| label: prob-2-1
+#| fig-width: 8
+#| fig-height: 6
+
+initial_price = 50
+r = 0.10  
+investment_cost = initial_price * (1 + r)
+
+prices = np.linspace(0, 100, 100)
+payoffs = prices
+profits = prices - investment_cost
+
+plt.figure(figsize=(8, 6))
+plt.plot(prices, payoffs, label='Payoff', linewidth=2)
+plt.plot(prices, profits, label='Profit', linewidth=2)
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True, alpha=0.3)
+plt.title('Long Stock Position (Initial Price = $50)')
+plt.xlabel('Stock Price')
+plt.ylabel('Value ($)')
+plt.legend()
+plt.grid(True)
+plt.legend()
+
+# Verify profit at $55
+price_55 = 55
+profit_55 = price_55 - investment_cost
+print(f"Profit at $55: ${profit_55:.2f}")
+```
+
+At a price of $55 in one year, the profit is approximately $0, verifying our calculation.
+
+## Problem 2.2: Short Stock Position
+
+A short position in XYZ stock:
+
+```{python}
+#| label: prob-2-2
+#| fig-width: 8
+#| fig-height: 6
+
+payoffs = -prices
+profits = -prices + investment_cost
+
+plt.figure(figsize=(8, 6))
+plt.plot(prices, payoffs, label='Payoff', linewidth=2)
+plt.plot(prices, profits, label='Profit', linewidth=2)
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True, alpha=0.3)
+plt.title('Short Stock Position (Initial Price = $50)')
+plt.xlabel('Stock Price')
+plt.ylabel('Value ($)')
+plt.legend()
+plt.grid(True)
+plt.legend()
+
+# Verify profit at $55
+profit_55 = -price_55 + investment_cost
+print(f"Profit at $55: ${profit_55:.2f}")
+```
+
+The profit at $55 is approximately $0, which verifies our calculation.
+
+## Problem 2.3: Option Position Opposites
+
+The opposite positions are:
+1. Purchased (long) call → Written (short) call
+2. Purchased (long) put → Written (short) put
+
+Visual demonstration:
+
+```{python}
+#| label: prob-2-3
+#| fig-width: 12
+#| fig-height: 5
+#| warning: false
+
+strike = 50
+premium = 5
+prices = np.linspace(0, 100, 100)
+
+# Call options
+long_call_payoffs = np.maximum(prices - strike, 0)
+long_call_profits = long_call_payoffs - premium
+short_call_profits = -long_call_payoffs + premium
+
+# Put options
+long_put_payoffs = np.maximum(strike - prices, 0)
+long_put_profits = long_put_payoffs - premium
+short_put_profits = -long_put_payoffs + premium
+
+# Create figure with proper spacing
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+fig.tight_layout(pad=3.0)
+
+# Plot calls
+ax1.plot(prices, long_call_profits, label='Long Call')
+ax1.plot(prices, short_call_profits, label='Short Call')
+ax1.set_title('Long vs Short Call')
+ax1.grid(True, alpha=0.3)
+ax1.legend()
+
+# Plot puts
+ax2.plot(prices, long_put_profits, label='Long Put')
+ax2.plot(prices, short_put_profits, label='Short Put')
+ax2.set_title('Long vs Short Put')
+ax2.grid(True, alpha=0.3)
+ax2.legend()
+```
+
+## Problem 2.4: Forward vs Call Option
+
+Comparing a long forward position with a long call option:
+
+```{python}
+#| label: prob-2-4
+#| fig-width: 8
+#| fig-height: 6
+
+forward_price = 50
+strike = 50
+test_prices = [40, 45, 50, 55, 60]
+
+# Calculate payoffs
+results = pd.DataFrame({
+    'Price': test_prices,
+    'Forward Payoff': [p - forward_price for p in test_prices],
+    'Call Payoff': [max(p - strike, 0) for p in test_prices]
+})
+
+print("Payoff Comparison:")
+print(results)
+
+# Visualize payoffs
+prices = np.linspace(30, 70, 100)
+forward_payoffs = prices - forward_price
+call_payoffs = np.maximum(prices - strike, 0)
+
+plt.figure(figsize=(8, 6))
+plt.plot(prices, forward_payoffs, label='Long Forward')
+plt.plot(prices, call_payoffs, label='Long Call')
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True, alpha=0.3)
+plt.title('Forward vs Call Option Payoffs')
+plt.xlabel('Price')
+plt.ylabel('Payoff')
+plt.legend()
+plt.grid(True)
+plt.legend()
+```
+
+The long call should be less expensive than the long forward because:
+1. The call option limits downside risk while maintaining upside potential
+2. The call holder has the right, but not obligation, to exercise
+3. The forward holder must take delivery at the forward price
+
+## Problem 2.5: Short Forward vs Put Option
+
+Comparing a short forward position with a long put option:
+
+```{python}
+#| label: prob-2-5
+#| fig-width: 8
+#| fig-height: 6
+
+results = pd.DataFrame({
+    'Price': test_prices,
+    'Short Forward Payoff': [forward_price - p for p in test_prices],
+    'Put Payoff': [max(strike - p, 0) for p in test_prices]
+})
+
+print("Payoff Comparison:")
+print(results)
+
+short_forward_payoffs = forward_price - prices
+put_payoffs = np.maximum(strike - prices, 0)
+
+plt.figure(figsize=(8, 6))
+plt.plot(prices, short_forward_payoffs, label='Short Forward')
+plt.plot(prices, put_payoffs, label='Long Put')
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True, alpha=0.3)
+plt.title('Short Forward vs Put Option Payoffs')
+plt.xlabel('Price')
+plt.ylabel('Payoff')
+plt.legend()
+plt.grid(True)
+plt.legend()
+```
+
+The long put should be less expensive than the short forward because:
+1. The put option provides limited upside potential
+2. The put holder has the right, but not obligation, to exercise
+3. The forward position requires delivery at the forward price
+
+## Problem 2.6: Zero-Coupon Bond
+
+Analysis of a zero-coupon bond with current price $91 and future value $100:
+
+```{python}
+#| label: prob-2-6
+#| fig-width: 8
+#| fig-height: 6
+
+current_price = 91
+future_value = 100
+
+# Calculate effective annual interest rate
+r = (future_value / current_price) - 1
+print(f"Effective annual interest rate: {r:.2%}")
+
+time_points = np.linspace(0, 2, 100)
+payoffs = np.full_like(time_points, future_value)
+profits = payoffs - current_price * (1 + r) ** time_points
+
+plt.figure(figsize=(8, 6))
+plt.plot(time_points, payoffs, label='Payoff')
+plt.plot(time_points, profits, label='Profit')
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.axvline(x=1, color='k', linestyle='--', alpha=0.3)
+plt.grid(True, alpha=0.3)
+plt.title('Zero-Coupon Bond Payoff and Profit')
+plt.xlabel('Time (years)')
+plt.ylabel('Value ($)')
+plt.legend()
+plt.grid(True)
+plt.legend()
+```
+
+The effective annual interest rate is approximately 9.89%.
+
+## Problem 2.13: Multiple Call Options
+
+Analysis of call options with different strikes when stock price is $40:
+
+```{python}
+#| label: prob-2-13
+#| fig-width: 8
+#| fig-height: 6
+
+stock_price = 40
+strikes = [35, 40, 45]
+premiums = [9.12, 6.22, 4.08]
+prices = np.linspace(20, 60, 100)
+
+plt.figure(figsize=(8, 6))
+
+for strike, premium in zip(strikes, premiums):
+    profits = np.maximum(prices - strike, 0) - premium
+    plt.plot(prices, profits, label=f'Strike=${strike}, Premium=${premium}')
+
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.axvline(x=stock_price, color='k', linestyle='--', alpha=0.3)
+plt.grid(True, alpha=0.3)
+plt.title('Call Options with Different Strikes')
+plt.xlabel('Stock Price')
+plt.ylabel('Profit')
+plt.legend()
+plt.grid(True)
+plt.legend()
+```
+
+The option premium decreases with strike price because:
+1. Higher strikes require larger price increases to become profitable
+2. The probability of exercise decreases with higher strikes
+3. The intrinsic value decreases with higher strikes
+
+## Problem 2.14: Multiple Put Options
+
+Analysis of put options with different strikes when stock price is $40:
+
+```{python}
+#| label: prob-2-14
+#| fig-width: 8
+#| fig-height: 6
+
+strikes = [35, 40, 45]
+premiums = [1.53, 3.26, 5.75]
+
+plt.figure(figsize=(8, 6))
+
+for strike, premium in zip(strikes, premiums):
+    profits = np.maximum(strike - prices, 0) - premium
+    plt.plot(prices, profits, label=f'Strike=${strike}, Premium=${premium}')
+
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.axvline(x=stock_price, color='k', linestyle='--', alpha=0.3)
+plt.grid(True, alpha=0.3)
+plt.title('Put Options with Different Strikes')
+plt.xlabel('Stock Price')
+plt.ylabel('Profit')
+plt.legend()
+plt.grid(True)
+plt.legend()
+```
+
+The option premium increases with strike price because:
+1. Higher strikes provide more downside protection
+2. The probability of exercise increases with higher strikes
+3. The intrinsic value increases with higher strikes
+
+## Problem 2.16: Option Calculator Program
+
+```{python}
+#| label: prob-2-16
+#| fig-width: 12
+#| fig-height: 10
+
+def calculate_payoff_profit(position_type, params):
+    """
+    Calculate payoff and profit for various option positions
+    
+    Parameters:
+    position_type: str ('stock', 'forward', 'call', 'put')
+    params: dict containing relevant parameters
+    """
+    S = np.linspace(0, 2*params.get('S0', 100), 100)  # Stock prices
+    
+    if position_type == 'stock':
+        payoff = S if params['is_long'] else -S
+        profit = payoff - params['S0']*(1 + params['r']) if params['is_long'] else -payoff - params['S0']*(1 + params['r'])
+    
+    elif position_type == 'forward':
+        payoff = (S - params['K']) if params['is_long'] else -(S - params['K'])
+        profit = payoff  # No upfront premium for forward
+        
+    elif position_type == 'call':
+        payoff = np.maximum(S - params['K'], 0) if params['is_long'] else -np.maximum(S - params['K'], 0)
+        profit = payoff - params['premium'] if params['is_long'] else -payoff + params['premium']
+        
+    elif position_type == 'put':
+        payoff = np.maximum(params['K'] - S, 0) if params['is_long'] else -np.maximum(params['K'] - S, 0)
+        profit = payoff - params['premium'] if params['is_long'] else -payoff + params['premium']
+    
+    return S, payoff, profit
+
+# Example usage
+params = {
+    'S0': 50,      # Current stock price
+    'K': 52,       # Strike price
+    'r': 0.05,     # Interest rate
+    'premium': 3,   # Option premium
+    'is_long': True # Long position
+}
+
+# Create subplots for all position types with constrained layout
+fig = plt.figure(figsize=(12, 10), constrained_layout=True)
+gs = fig.add_gridspec(2, 2)
+
+# Stock positions
+ax1 = fig.add_subplot(gs[0, 0])
+S, payoff, profit = calculate_payoff_profit('stock', {**params, 'is_long': True})
+ax1.plot(S, payoff, label='Long Payoff')
+ax1.plot(S, profit, label='Long Profit')
+S, payoff, profit = calculate_payoff_profit('stock', {**params, 'is_long': False})
+ax1.plot(S, payoff, label='Short Payoff')
+ax1.plot(S, profit, label='Short Profit')
+ax1.set_title('Stock Positions')
+ax1.grid(True)
+ax1.legend()
+
+# Forward positions
+ax2 = fig.add_subplot(gs[0, 1])
+S, payoff, profit = calculate_payoff_profit('forward', {**params, 'is_long': True})
+ax2.plot(S, payoff, label='Long Payoff')
+ax2.plot(S, profit, label='Long Profit')
+S, payoff, profit = calculate_payoff_profit('forward', {**params, 'is_long': False})
+ax2.plot(S, payoff, label='Short Payoff')
+ax2.plot(S, profit, label='Short Profit')
+ax2.set_title('Forward Positions')
+ax2.grid(True)
+ax2.legend()
+
+# Call options
+ax3 = fig.add_subplot(gs[1, 0])
+S, payoff, profit = calculate_payoff_profit('call', {**params, 'is_long': True})
+ax3.plot(S, payoff, label='Long Payoff')
+ax3.plot(S, profit, label='Long Profit')
+S, payoff, profit = calculate_payoff_profit('call', {**params, 'is_long': False})
+ax3.plot(S, payoff, label='Short Payoff')
+ax3.plot(S, profit, label='Short Profit')
+ax3.set_title('Call Options')
+ax3.grid(True)
+ax3.legend()
+
+# Put options
+ax4 = fig.add_subplot(gs[1, 1])
+S, payoff, profit = calculate_payoff_profit('put', {**params, 'is_long': True})
+ax4.plot(S, payoff, label='Long Payoff')
+ax4.plot(S, profit, label='Long Profit')
+S, payoff, profit = calculate_payoff_profit('put', {**params, 'is_long': False})
+ax4.plot(S, payoff, label='Short Payoff')
+ax4.plot(S, profit, label='Short Profit')
+ax4.set_title('Put Options')
+ax4.grid(True)
+ax4.legend()
+```
+
+## Problem 9.1: Put-Call Parity with Dividends
+
+```{python}
+#| label: prob-9-1
+#| fig-width: 8
+#| fig-height: 6
+
+def call_payoff(S, K):
+    """
+    Calculate call option payoff
+    
+    Parameters:
+    S: array-like, Stock prices
+    K: float, Strike price
+    
+    Returns:
+    array-like, Call option payoffs
+    """
+    return np.maximum(S - K, 0)
+
+def put_payoff(S, K):
+    """
+    Calculate put option payoff
+    
+    Parameters:
+    S: array-like, Stock prices
+    K: float, Strike price
+    
+    Returns:
+    array-like, Put option payoffs
+    """
+    return np.maximum(K - S, 0)
+
+# Given parameters
+S0 = 32.00
+K = 35.00
+T = 0.5  # 6 months
+r = 0.04  # 4% continuous rate
+q = 0.06  # 6% dividend yield
+C = 2.27  # Call premium
+
+# Calculate put premium using put-call parity with dividends
+# C - P = S₀e⁻ᵍᵗ - Ke⁻ʳᵗ
+# P = C - S₀e⁻ᵍᵗ + Ke⁻ʳᵗ
+
+P = C - S0 * np.exp(-q * T) + K * np.exp(-r * T)
+
+print(f"Stock price: ${S0}")
+print(f"Strike price: ${K}")
+print(f"Call premium: ${C}")
+print(f"Calculated put premium: ${P:.2f}")
+
+# Verify using payoff diagram
+S = np.linspace(20, 50, 100)
+call_payoffs = call_payoff(S, K)
+put_payoffs = put_payoff(S, K)
+
+plt.figure(figsize=(8, 6))
+plt.plot(S, call_payoffs, label='Call Payoff')
+plt.plot(S, put_payoffs, label='Put Payoff')
+plt.axvline(x=K, color='k', linestyle='--', alpha=0.3)
+plt.grid(True)
+plt.title('Call and Put Payoffs')
+plt.xlabel('Stock Price')
+plt.ylabel('Payoff')
+plt.legend()
+```
+
+## Problem 9.2: Present Value of Dividends
+
+```{python}
+#| label: prob-9-2
+#| fig-width: 8
+#| fig-height: 6
+
+# Given parameters
+S0 = 32.00
+K = 30.00
+T = 0.5
+r = 0.04
+C = 4.29
+P = 2.64
+
+# Using put-call parity:
+# C - P = S₀e⁻ᵍᵗ - Ke⁻ʳᵗ
+# S₀e⁻ᵍᵗ = C - P + Ke⁻ʳᵗ
+# PV(dividends) = S₀ - S₀e⁻ᵍᵗ
+
+# Calculate S₀e⁻ᵍᵗ
+S0_exp_neg_qt = C - P + K * np.exp(-r * T)
+
+# Calculate PV of dividends
+PV_dividends = S0 - S0_exp_neg_qt
+
+print(f"Stock price: ${S0}")
+print(f"Strike price: ${K}")
+print(f"Call premium: ${C}")
+print(f"Put premium: ${P}")
+print(f"Present value of dividends: ${PV_dividends:.2f}")
+
+# Calculate implied dividend yield
+q = -np.log(S0_exp_neg_qt/S0) / T
+print(f"Implied continuous dividend yield: {q:.2%}")
+
+# Plot payoffs for verification
+S = np.linspace(20, 40, 100)
+call_payoffs = call_payoff(S, K)
+put_payoffs = put_payoff(S, K)
+
+plt.figure(figsize=(8, 6))
+plt.plot(S, call_payoffs, label='Call Payoff')
+plt.plot(S, put_payoffs, label='Put Payoff')
+plt.axvline(x=K, color='k', linestyle='--', alpha=0.3)
+plt.grid(True)
+plt.title('Call and Put Payoffs')
+plt.xlabel('Stock Price')
+plt.ylabel('Payoff')
+plt.legend()
+```
+
+## Problem 9.3: Index Option Strategy
+
+```{python}
+#| label: prob-9-3
+#| fig-width: 8
+#| fig-height: 6
+
+# Given parameters
+S0 = 800
+K = 815
+r = 0.05
+T = 1
+C = 75
+P = 45
+
+# Strategy: Long stock + Short call + Long put
+# Initial cost = S₀ - C + P
+initial_cost = S0 - C + P
+
+# At expiration, position value = min(K, ST)
+guaranteed_value = K
+
+# Calculate rate of return
+return_rate = (guaranteed_value / initial_cost) - 1
+
+print("1. Rate of return analysis:")
+print(f"Initial cost: ${initial_cost}")
+print(f"Guaranteed value: ${guaranteed_value}")
+print(f"Rate of return: {return_rate:.2%}")
+
+# 2. Arbitrage check using put-call parity
+# C - P = S₀e⁻ᵍᵗ - Ke⁻ʳᵗ (with q = 0)
+theoretical_diff = S0 - K * np.exp(-r * T)
+actual_diff = C - P
+
+print("\n2. Arbitrage check:")
+print(f"Theoretical C-P: ${theoretical_diff:.2f}")
+print(f"Actual C-P: ${actual_diff:.2f}")
+print(f"Difference: ${actual_diff - theoretical_diff:.2f}")
+
+# Plot strategy payoff
+S = np.linspace(700, 900, 100)
+plt.figure(figsize=(8, 6))
+
+# Plot individual components
+plt.plot(S, S - S0, label='Long Stock')
+plt.plot(S, -call_payoff(S, K) + C, label='Short Call')
+plt.plot(S, put_payoff(S, K) - P, label='Long Put')
+
+# Plot total strategy payoff
+strategy_payoff = (S - S0) + (-call_payoff(S, K) + C) + (put_payoff(S, K) - P)
+plt.plot(S, strategy_payoff, 'k--', label='Total Strategy', linewidth=2)
+
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.axvline(x=K, color='k', linestyle='--', alpha=0.3)
+plt.grid(True)
+plt.title('Index Option Strategy Payoff')
+plt.xlabel('Stock Price')
+plt.ylabel('Profit')
+plt.legend()
+```
+
+## Problem 9.8: Put-Call Parity Violation
+
+```{python}
+#| label: prob-9-8
+#| fig-width: 8
+#| fig-height: 6
+
+strikes = [50, 55]
+calls = [9, 10]
+puts = [7, 6]
+
+# Create a table of the options
+options_df = pd.DataFrame({
+    'Strike': strikes,
+    'Call Premium': calls,
+    'Put Premium': puts,
+    'C - P': [c - p for c, p in zip(calls, puts)]
+})
+print("Option Prices and C-P Spreads:")
+print(options_df)
+
+# Plot payoffs
+S = np.linspace(40, 65, 100)
+plt.figure(figsize=(8, 6))
+
+for K, C, P in zip(strikes, calls, puts):
+    call_payoffs = call_payoff(S, K) - C
+    put_payoffs = put_payoff(S, K) - P
+    plt.plot(S, call_payoffs, label=f'K={K} Call')
+    plt.plot(S, put_payoffs, label=f'K={K} Put')
+
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True)
+plt.title('Option Payoffs')
+plt.xlabel('Stock Price')
+plt.ylabel('Profit')
+plt.legend()
+```
+
+## Problem 9.9: Put-Call Parity Violation
+
+```{python}
+#| label: prob-9-9
+#| fig-width: 8
+#| fig-height: 6
+
+strikes = [50, 55]
+calls = [16, 10]
+puts = [7, 14]
+
+# Create a table of the options
+options_df = pd.DataFrame({
+    'Strike': strikes,
+    'Call Premium': calls,
+    'Put Premium': puts
+})
+
+print("Option Prices:")
+print(options_df)
+
+# Check put-call parity violation
+spread1 = calls[0] - puts[0]  # K=50
+spread2 = calls[1] - puts[1]  # K=55
+
+print("\nSpread Analysis:")
+print(f"Spread at K=50: {spread1}")
+print(f"Spread at K=55: {spread2}")
+print(f"Difference in spreads: {spread1 - spread2}")
+
+# Plot arbitrage strategy payoffs
+S = np.linspace(40, 65, 100)
+plt.figure(figsize=(8, 6))
+
+# Plot individual components
+plt.plot(S, -call_payoff(S, strikes[0]), label='Short 50-strike Call')
+plt.plot(S, put_payoff(S, strikes[0]), label='Long 50-strike Put')
+plt.plot(S, call_payoff(S, strikes[1]), label='Long 55-strike Call')
+plt.plot(S, -put_payoff(S, strikes[1]), label='Short 55-strike Put')
+
+# Plot total strategy payoff
+strategy_payoff = (-call_payoff(S, strikes[0]) + put_payoff(S, strikes[0]) + 
+                   call_payoff(S, strikes[1]) - put_payoff(S, strikes[1]))
+plt.plot(S, strategy_payoff, 'k--', label='Total Strategy', linewidth=2)
+
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True)
+plt.title('Arbitrage Strategy Payoffs')
+plt.xlabel('Stock Price')
+plt.ylabel('Payoff')
+plt.legend()
+```
+
+## Problem 9.10: Call Spread Convexity Violation
+
+```{python}
+#| label: prob-9-10
+#| fig-width: 8
+#| fig-height: 6
+
+strikes = [50, 55, 60]
+calls = [18, 14, 9.50]
+puts = [7, 10.75, 14.45]
+
+# Plot butterfly spread payoffs
+S = np.linspace(40, 70, 100)
+plt.figure(figsize=(8, 6))
+
+# Calculate ratios for butterfly spread
+K1, K2, K3 = strikes
+ratio = (K3 - K2) / (K2 - K1)
+
+# Plot components
+plt.plot(S, -ratio * call_payoff(S, K1), label=f'Short {ratio:.2f} K1 Calls')
+plt.plot(S, (1 + ratio) * call_payoff(S, K2), label=f'Long {1+ratio:.2f} K2 Calls')
+plt.plot(S, -call_payoff(S, K3), label='Short K3 Call')
+
+# Plot total strategy
+butterfly_payoff = (-ratio * call_payoff(S, K1) + 
+                   (1 + ratio) * call_payoff(S, K2) - 
+                   call_payoff(S, K3))
+plt.plot(S, butterfly_payoff, 'k--', label='Total Strategy', linewidth=2)
+
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True)
+plt.title('Butterfly Spread Payoffs')
+plt.xlabel('Stock Price')
+plt.ylabel('Payoff')
+plt.legend()
+```
+
+## Problem 9.11: Put Spread Convexity Violation
+
+```{python}
+#| label: prob-9-11
+#| fig-width: 8
+#| fig-height: 6
+
+strikes = [80, 100, 105]
+calls = [22, 9, 5]
+puts = [4, 21, 24.80]
+
+# Plot butterfly spread payoffs
+S = np.linspace(70, 115, 100)
+plt.figure(figsize=(8, 6))
+
+# Calculate ratios for butterfly spread
+K1, K2, K3 = strikes
+ratio = (K3 - K2) / (K2 - K1)
+
+# Plot components
+plt.plot(S, -ratio * put_payoff(S, K1), label=f'Short {ratio:.2f} K1 Puts')
+plt.plot(S, (1 + ratio) * put_payoff(S, K2), label=f'Long {1+ratio:.2f} K2 Puts')
+plt.plot(S, -put_payoff(S, K3), label='Short K3 Put')
+
+# Plot total strategy
+butterfly_payoff = (-ratio * put_payoff(S, K1) + 
+                   (1 + ratio) * put_payoff(S, K2) - 
+                   put_payoff(S, K3))
+plt.plot(S, butterfly_payoff, 'k--', label='Total Strategy', linewidth=2)
+
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True)
+plt.title('Put Butterfly Spread Payoffs')
+plt.xlabel('Stock Price')
+plt.ylabel('Payoff')
+plt.legend()
+```
+
+## Problem 9.12: Call Spread Arbitrage
+
+```{python}
+#| label: prob-9-12
+#| fig-width: 8
+#| fig-height: 6
+
+# Part 1: Simple call spread
+K1, K2 = 90, 95
+C1, C2 = 10, 4
+
+# Plot vertical spread payoffs
+S = np.linspace(80, 105, 100)
+plt.figure(figsize=(8, 6))
+
+# Plot components
+plt.plot(S, call_payoff(S, K1) - C1, label='Long K1 Call')
+plt.plot(S, -call_payoff(S, K2) + C2, label='Short K2 Call')
+
+# Plot total strategy
+spread_payoff = (call_payoff(S, K1) - C1) + (-call_payoff(S, K2) + C2)
+plt.plot(S, spread_payoff, 'k--', label='Total Strategy', linewidth=2)
+
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True)
+plt.title('Call Spread Payoffs')
+plt.xlabel('Stock Price')
+plt.ylabel('Profit')
+plt.legend()
+```
+
+## Problem 9.15: Calendar Spread Arbitrage
+
+```{python}
+#| label: prob-9-15
+#| fig-width: 8
+#| fig-height: 6
+
+S0 = 100
+r = 0.05
+T1 = 1
+T2 = 1.5
+
+K1 = S0 * np.exp(r * T1)
+K2 = S0 * np.exp(r * T2)
+C1 = 11.924
+C2 = 11.50
+
+# Plot calendar spread payoffs at T1
+S = np.linspace(80, 120, 100)
+plt.figure(figsize=(8, 6))
+
+# Plot components at T1
+plt.plot(S, call_payoff(S, K1), label='Long T1 Call')
+plt.plot(S, -call_payoff(S, K2), label='Short T2 Call')
+
+# Plot total strategy at T1
+spread_payoff = call_payoff(S, K1) - call_payoff(S, K2)
+plt.plot(S, spread_payoff, 'k--', label='Total Strategy at T1', linewidth=2)
+
+plt.axhline(y=0, color='k', linestyle='--', alpha=0.3)
+plt.grid(True)
+plt.title('Calendar Spread Payoffs at T1')
+plt.xlabel('Stock Price')
+plt.ylabel('Payoff')
+plt.legend()
+```
