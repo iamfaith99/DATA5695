@@ -343,94 +343,83 @@ The option premium increases with strike price because:
 #| fig-width: 12
 #| fig-height: 10
 
-def calculate_payoff_profit(position_type, params):
-    """
-    Calculate payoff and profit for various option positions
+def calculate_instruments(S_T, S0, F, r, call_strike, call_premium, put_strike, put_premium):
+    """Calculate payoffs and profits for all instruments"""
+    results = {}
     
-    Parameters:
-    position_type: str ('stock', 'forward', 'call', 'put')
-    params: dict containing relevant parameters
-    """
-    S = np.linspace(0, 2*params.get('S0', 100), 100)  # Stock prices
+    # Stock positions
+    results['long_stock'] = S_T - S0
+    results['short_stock'] = S0 - S_T
     
-    if position_type == 'stock':
-        payoff = S if params['is_long'] else -S
-        profit = payoff - params['S0']*(1 + params['r']) if params['is_long'] else -payoff - params['S0']*(1 + params['r'])
+    # Forward positions
+    results['long_forward'] = S_T - F
+    results['short_forward'] = F - S_T
     
-    elif position_type == 'forward':
-        payoff = (S - params['K']) if params['is_long'] else -(S - params['K'])
-        profit = payoff  # No upfront premium for forward
-        
-    elif position_type == 'call':
-        payoff = np.maximum(S - params['K'], 0) if params['is_long'] else -np.maximum(S - params['K'], 0)
-        profit = payoff - params['premium'] if params['is_long'] else -payoff + params['premium']
-        
-    elif position_type == 'put':
-        payoff = np.maximum(params['K'] - S, 0) if params['is_long'] else -np.maximum(params['K'] - S, 0)
-        profit = payoff - params['premium'] if params['is_long'] else -payoff + params['premium']
+    # Call options
+    call_payoff_long = np.maximum(S_T - call_strike, 0)
+    results['call_purchased'] = {
+        'payoff': call_payoff_long,
+        'profit': call_payoff_long - call_premium
+    }
+    results['call_written'] = {
+        'payoff': -call_payoff_long,
+        'profit': -call_payoff_long + call_premium
+    }
     
-    return S, payoff, profit
+    # Put options
+    put_payoff_long = np.maximum(put_strike - S_T, 0)
+    results['put_purchased'] = {
+        'payoff': put_payoff_long,
+        'profit': put_payoff_long - put_premium
+    }
+    results['put_written'] = {
+        'payoff': -put_payoff_long,
+        'profit': -put_payoff_long + put_premium
+    }
+    
+    return results
 
-# Example usage
-params = {
-    'S0': 50,      # Current stock price
-    'K': 52,       # Strike price
-    'r': 0.05,     # Interest rate
-    'premium': 3,   # Option premium
-    'is_long': True # Long position
-}
+# Parameters (user can modify these)
+S0 = 100        # Initial stock price
+F = 105         # Forward price
+r = 0.05        # Annual interest rate
+call_strike = 110
+call_premium = 5
+put_strike = 90
+put_premium = 3
 
-# Create subplots for all position types with constrained layout
-fig = plt.figure(figsize=(12, 10), constrained_layout=True)
-gs = fig.add_gridspec(2, 2)
+# Generate stock price range
+S_T = np.linspace(50, 150, 100)
 
-# Stock positions
-ax1 = fig.add_subplot(gs[0, 0])
-S, payoff, profit = calculate_payoff_profit('stock', {**params, 'is_long': True})
-ax1.plot(S, payoff, label='Long Payoff')
-ax1.plot(S, profit, label='Long Profit')
-S, payoff, profit = calculate_payoff_profit('stock', {**params, 'is_long': False})
-ax1.plot(S, payoff, label='Short Payoff')
-ax1.plot(S, profit, label='Short Profit')
-ax1.set_title('Stock Positions')
-ax1.grid(True)
-ax1.legend()
+# Calculate all instruments
+results = calculate_instruments(S_T, S0, F, r, call_strike, call_premium, put_strike, put_premium)
 
-# Forward positions
-ax2 = fig.add_subplot(gs[0, 1])
-S, payoff, profit = calculate_payoff_profit('forward', {**params, 'is_long': True})
-ax2.plot(S, payoff, label='Long Payoff')
-ax2.plot(S, profit, label='Long Profit')
-S, payoff, profit = calculate_payoff_profit('forward', {**params, 'is_long': False})
-ax2.plot(S, payoff, label='Short Payoff')
-ax2.plot(S, profit, label='Short Profit')
-ax2.set_title('Forward Positions')
-ax2.grid(True)
-ax2.legend()
+# Plotting
+plt.figure(figsize=(12, 8))
 
-# Call options
-ax3 = fig.add_subplot(gs[1, 0])
-S, payoff, profit = calculate_payoff_profit('call', {**params, 'is_long': True})
-ax3.plot(S, payoff, label='Long Payoff')
-ax3.plot(S, profit, label='Long Profit')
-S, payoff, profit = calculate_payoff_profit('call', {**params, 'is_long': False})
-ax3.plot(S, payoff, label='Short Payoff')
-ax3.plot(S, profit, label='Short Profit')
-ax3.set_title('Call Options')
-ax3.grid(True)
-ax3.legend()
+# Plot stock positions
+plt.plot(S_T, results['long_stock'], label='Long Stock')
+plt.plot(S_T, results['short_stock'], label='Short Stock')
 
-# Put options
-ax4 = fig.add_subplot(gs[1, 1])
-S, payoff, profit = calculate_payoff_profit('put', {**params, 'is_long': True})
-ax4.plot(S, payoff, label='Long Payoff')
-ax4.plot(S, profit, label='Long Profit')
-S, payoff, profit = calculate_payoff_profit('put', {**params, 'is_long': False})
-ax4.plot(S, payoff, label='Short Payoff')
-ax4.plot(S, profit, label='Short Profit')
-ax4.set_title('Put Options')
-ax4.grid(True)
-ax4.legend()
+# Plot forward positions
+plt.plot(S_T, results['long_forward'], label='Long Forward')
+plt.plot(S_T, results['short_forward'], label='Short Forward')
+
+# Plot call options
+plt.plot(S_T, results['call_purchased']['profit'], '--', label='Purchased Call')
+plt.plot(S_T, results['call_written']['profit'], '--', label='Written Call')
+
+# Plot put options
+plt.plot(S_T, results['put_purchased']['profit'], '--', label='Purchased Put')
+plt.plot(S_T, results['put_written']['profit'], '--', label='Written Put')
+
+# Formatting
+plt.title('Profit/Loss Diagrams for Various Instruments')
+plt.xlabel('Underlying Price at Expiration')
+plt.ylabel('Profit')
+plt.axhline(0, color='black', lw=0.5)
+plt.grid(True)
+plt.legend()
 ```
 
 ## Problem 9.1: Put-Call Parity with Dividends

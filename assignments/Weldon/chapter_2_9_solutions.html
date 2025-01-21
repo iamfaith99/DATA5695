@@ -425,94 +425,83 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="problem-2.16-option-calculator-program" class="level2">
 <h2 class="anchored" data-anchor-id="problem-2.16-option-calculator-program">Problem 2.16: Option Calculator Program</h2>
 <div id="cell-prob-2-16" class="cell" data-fig-height="10" data-fig-width="12" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_payoff_profit(position_type, params):</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculate payoff and profit for various option positions</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">    position_type: str ('stock', 'forward', 'call', 'put')</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">    params: dict containing relevant parameters</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    S <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">2</span><span class="op">*</span>params.get(<span class="st">'S0'</span>, <span class="dv">100</span>), <span class="dv">100</span>)  <span class="co"># Stock prices</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> position_type <span class="op">==</span> <span class="st">'stock'</span>:</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        payoff <span class="op">=</span> S <span class="cf">if</span> params[<span class="st">'is_long'</span>] <span class="cf">else</span> <span class="op">-</span>S</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        profit <span class="op">=</span> payoff <span class="op">-</span> params[<span class="st">'S0'</span>]<span class="op">*</span>(<span class="dv">1</span> <span class="op">+</span> params[<span class="st">'r'</span>]) <span class="cf">if</span> params[<span class="st">'is_long'</span>] <span class="cf">else</span> <span class="op">-</span>payoff <span class="op">-</span> params[<span class="st">'S0'</span>]<span class="op">*</span>(<span class="dv">1</span> <span class="op">+</span> params[<span class="st">'r'</span>])</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> position_type <span class="op">==</span> <span class="st">'forward'</span>:</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        payoff <span class="op">=</span> (S <span class="op">-</span> params[<span class="st">'K'</span>]) <span class="cf">if</span> params[<span class="st">'is_long'</span>] <span class="cf">else</span> <span class="op">-</span>(S <span class="op">-</span> params[<span class="st">'K'</span>])</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        profit <span class="op">=</span> payoff  <span class="co"># No upfront premium for forward</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> position_type <span class="op">==</span> <span class="st">'call'</span>:</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        payoff <span class="op">=</span> np.maximum(S <span class="op">-</span> params[<span class="st">'K'</span>], <span class="dv">0</span>) <span class="cf">if</span> params[<span class="st">'is_long'</span>] <span class="cf">else</span> <span class="op">-</span>np.maximum(S <span class="op">-</span> params[<span class="st">'K'</span>], <span class="dv">0</span>)</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        profit <span class="op">=</span> payoff <span class="op">-</span> params[<span class="st">'premium'</span>] <span class="cf">if</span> params[<span class="st">'is_long'</span>] <span class="cf">else</span> <span class="op">-</span>payoff <span class="op">+</span> params[<span class="st">'premium'</span>]</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> position_type <span class="op">==</span> <span class="st">'put'</span>:</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>        payoff <span class="op">=</span> np.maximum(params[<span class="st">'K'</span>] <span class="op">-</span> S, <span class="dv">0</span>) <span class="cf">if</span> params[<span class="st">'is_long'</span>] <span class="cf">else</span> <span class="op">-</span>np.maximum(params[<span class="st">'K'</span>] <span class="op">-</span> S, <span class="dv">0</span>)</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>        profit <span class="op">=</span> payoff <span class="op">-</span> params[<span class="st">'premium'</span>] <span class="cf">if</span> params[<span class="st">'is_long'</span>] <span class="cf">else</span> <span class="op">-</span>payoff <span class="op">+</span> params[<span class="st">'premium'</span>]</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> S, payoff, profit</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Example usage</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">'S0'</span>: <span class="dv">50</span>,      <span class="co"># Current stock price</span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">'K'</span>: <span class="dv">52</span>,       <span class="co"># Strike price</span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">'r'</span>: <span class="fl">0.05</span>,     <span class="co"># Interest rate</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">'premium'</span>: <span class="dv">3</span>,   <span class="co"># Option premium</span></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">'is_long'</span>: <span class="va">True</span> <span class="co"># Long position</span></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Create subplots for all position types with constrained layout</span></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>), constrained_layout<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>gs <span class="op">=</span> fig.add_gridspec(<span class="dv">2</span>, <span class="dv">2</span>)</span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Stock positions</span></span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>ax1 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, <span class="dv">0</span>])</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>S, payoff, profit <span class="op">=</span> calculate_payoff_profit(<span class="st">'stock'</span>, {<span class="op">**</span>params, <span class="st">'is_long'</span>: <span class="va">True</span>})</span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>ax1.plot(S, payoff, label<span class="op">=</span><span class="st">'Long Payoff'</span>)</span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>ax1.plot(S, profit, label<span class="op">=</span><span class="st">'Long Profit'</span>)</span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>S, payoff, profit <span class="op">=</span> calculate_payoff_profit(<span class="st">'stock'</span>, {<span class="op">**</span>params, <span class="st">'is_long'</span>: <span class="va">False</span>})</span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>ax1.plot(S, payoff, label<span class="op">=</span><span class="st">'Short Payoff'</span>)</span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>ax1.plot(S, profit, label<span class="op">=</span><span class="st">'Short Profit'</span>)</span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'Stock Positions'</span>)</span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>ax1.grid(<span class="va">True</span>)</span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>ax1.legend()</span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward positions</span></span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>ax2 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, <span class="dv">1</span>])</span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>S, payoff, profit <span class="op">=</span> calculate_payoff_profit(<span class="st">'forward'</span>, {<span class="op">**</span>params, <span class="st">'is_long'</span>: <span class="va">True</span>})</span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>ax2.plot(S, payoff, label<span class="op">=</span><span class="st">'Long Payoff'</span>)</span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>ax2.plot(S, profit, label<span class="op">=</span><span class="st">'Long Profit'</span>)</span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>S, payoff, profit <span class="op">=</span> calculate_payoff_profit(<span class="st">'forward'</span>, {<span class="op">**</span>params, <span class="st">'is_long'</span>: <span class="va">False</span>})</span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>ax2.plot(S, payoff, label<span class="op">=</span><span class="st">'Short Payoff'</span>)</span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>ax2.plot(S, profit, label<span class="op">=</span><span class="st">'Short Profit'</span>)</span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'Forward Positions'</span>)</span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>ax2.grid(<span class="va">True</span>)</span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>ax2.legend()</span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Call options</span></span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>ax3 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">1</span>, <span class="dv">0</span>])</span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>S, payoff, profit <span class="op">=</span> calculate_payoff_profit(<span class="st">'call'</span>, {<span class="op">**</span>params, <span class="st">'is_long'</span>: <span class="va">True</span>})</span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>ax3.plot(S, payoff, label<span class="op">=</span><span class="st">'Long Payoff'</span>)</span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>ax3.plot(S, profit, label<span class="op">=</span><span class="st">'Long Profit'</span>)</span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>S, payoff, profit <span class="op">=</span> calculate_payoff_profit(<span class="st">'call'</span>, {<span class="op">**</span>params, <span class="st">'is_long'</span>: <span class="va">False</span>})</span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>ax3.plot(S, payoff, label<span class="op">=</span><span class="st">'Short Payoff'</span>)</span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>ax3.plot(S, profit, label<span class="op">=</span><span class="st">'Short Profit'</span>)</span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>ax3.set_title(<span class="st">'Call Options'</span>)</span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>ax3.grid(<span class="va">True</span>)</span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>ax3.legend()</span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Put options</span></span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>ax4 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">1</span>, <span class="dv">1</span>])</span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>S, payoff, profit <span class="op">=</span> calculate_payoff_profit(<span class="st">'put'</span>, {<span class="op">**</span>params, <span class="st">'is_long'</span>: <span class="va">True</span>})</span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>ax4.plot(S, payoff, label<span class="op">=</span><span class="st">'Long Payoff'</span>)</span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>ax4.plot(S, profit, label<span class="op">=</span><span class="st">'Long Profit'</span>)</span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>S, payoff, profit <span class="op">=</span> calculate_payoff_profit(<span class="st">'put'</span>, {<span class="op">**</span>params, <span class="st">'is_long'</span>: <span class="va">False</span>})</span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>ax4.plot(S, payoff, label<span class="op">=</span><span class="st">'Short Payoff'</span>)</span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>ax4.plot(S, profit, label<span class="op">=</span><span class="st">'Short Profit'</span>)</span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>ax4.set_title(<span class="st">'Put Options'</span>)</span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>ax4.grid(<span class="va">True</span>)</span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a>ax4.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_instruments(S_T, S0, F, r, call_strike, call_premium, put_strike, put_premium):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Calculate payoffs and profits for all instruments"""</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> {}</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Stock positions</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    results[<span class="st">'long_stock'</span>] <span class="op">=</span> S_T <span class="op">-</span> S0</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    results[<span class="st">'short_stock'</span>] <span class="op">=</span> S0 <span class="op">-</span> S_T</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Forward positions</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    results[<span class="st">'long_forward'</span>] <span class="op">=</span> S_T <span class="op">-</span> F</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    results[<span class="st">'short_forward'</span>] <span class="op">=</span> F <span class="op">-</span> S_T</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Call options</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    call_payoff_long <span class="op">=</span> np.maximum(S_T <span class="op">-</span> call_strike, <span class="dv">0</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    results[<span class="st">'call_purchased'</span>] <span class="op">=</span> {</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'payoff'</span>: call_payoff_long,</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'profit'</span>: call_payoff_long <span class="op">-</span> call_premium</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    results[<span class="st">'call_written'</span>] <span class="op">=</span> {</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">'payoff'</span>: <span class="op">-</span>call_payoff_long,</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">'profit'</span>: <span class="op">-</span>call_payoff_long <span class="op">+</span> call_premium</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Put options</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    put_payoff_long <span class="op">=</span> np.maximum(put_strike <span class="op">-</span> S_T, <span class="dv">0</span>)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    results[<span class="st">'put_purchased'</span>] <span class="op">=</span> {</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">'payoff'</span>: put_payoff_long,</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">'profit'</span>: put_payoff_long <span class="op">-</span> put_premium</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    results[<span class="st">'put_written'</span>] <span class="op">=</span> {</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">'payoff'</span>: <span class="op">-</span>put_payoff_long,</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">'profit'</span>: <span class="op">-</span>put_payoff_long <span class="op">+</span> put_premium</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters (user can modify these)</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>S0 <span class="op">=</span> <span class="dv">100</span>        <span class="co"># Initial stock price</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>F <span class="op">=</span> <span class="dv">105</span>         <span class="co"># Forward price</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span>        <span class="co"># Annual interest rate</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>call_strike <span class="op">=</span> <span class="dv">110</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>call_premium <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>put_strike <span class="op">=</span> <span class="dv">90</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>put_premium <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate stock price range</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>S_T <span class="op">=</span> np.linspace(<span class="dv">50</span>, <span class="dv">150</span>, <span class="dv">100</span>)</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate all instruments</span></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> calculate_instruments(S_T, S0, F, r, call_strike, call_premium, put_strike, put_premium)</span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>))</span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot stock positions</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>plt.plot(S_T, results[<span class="st">'long_stock'</span>], label<span class="op">=</span><span class="st">'Long Stock'</span>)</span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>plt.plot(S_T, results[<span class="st">'short_stock'</span>], label<span class="op">=</span><span class="st">'Short Stock'</span>)</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot forward positions</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>plt.plot(S_T, results[<span class="st">'long_forward'</span>], label<span class="op">=</span><span class="st">'Long Forward'</span>)</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>plt.plot(S_T, results[<span class="st">'short_forward'</span>], label<span class="op">=</span><span class="st">'Short Forward'</span>)</span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot call options</span></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>plt.plot(S_T, results[<span class="st">'call_purchased'</span>][<span class="st">'profit'</span>], <span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Purchased Call'</span>)</span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>plt.plot(S_T, results[<span class="st">'call_written'</span>][<span class="st">'profit'</span>], <span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Written Call'</span>)</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot put options</span></span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>plt.plot(S_T, results[<span class="st">'put_purchased'</span>][<span class="st">'profit'</span>], <span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Purchased Put'</span>)</span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>plt.plot(S_T, results[<span class="st">'put_written'</span>][<span class="st">'profit'</span>], <span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Written Put'</span>)</span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Formatting</span></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Profit/Loss Diagrams for Various Instruments'</span>)</span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Underlying Price at Expiration'</span>)</span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Profit'</span>)</span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>plt.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'black'</span>, lw<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>plt.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
