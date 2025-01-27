@@ -1,0 +1,275 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: One-Period Binomial Option Pricing Algorithm\n",
+        "jupyter: python3\n",
+        "---"
+      ],
+      "id": "dc64267d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import numpy as np"
+      ],
+      "id": "804113f7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def call_payoff(spot, strike):\n",
+        "    return np.maximum(spot - strike, 0.0)"
+      ],
+      "id": "b7837018",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "def put_payoff(spot, strike):\n",
+        "    return np.maximum(strike - spot, 0.0)"
+      ],
+      "id": "c6e71636",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Step 0: Gather Data & Initialize Variables\n"
+      ],
+      "id": "a37b9e6f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Problem setup\n",
+        "S = 41.0\n",
+        "K = 40.0\n",
+        "r = 0.08\n",
+        "q = 0.0 \n",
+        "v = 0.30\n",
+        "h = 1.0"
+      ],
+      "id": "5286db2f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Step 1: Build the Forward Tree\n"
+      ],
+      "id": "61415f68"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "u = np.exp((r - q)*h + v*np.sqrt(h))\n",
+        "d = np.exp((r - q)*h - v*np.sqrt(h))"
+      ],
+      "id": "b0213bdd",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "u, d"
+      ],
+      "id": "c87c21cf",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "Su, Sd = u*S, d*S\n",
+        "Su, Sd"
+      ],
+      "id": "4951d9d4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Step 2: Apply the Payoff Function (Boundary Condition)\n"
+      ],
+      "id": "b62a7181"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "Cu = call_payoff(Su, K)\n",
+        "Cd = call_payoff(Sd, K)\n",
+        "Cu, Cd"
+      ],
+      "id": "794d0bf0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### Step 3: Solve, for $\\Delta$, $B$, and $C_{0}$\n"
+      ],
+      "id": "558dc675"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "D = (Cu - Cd) / (Su - Sd)\n",
+        "B = np.exp(-r*h) * ((u*Cd - d*Cu) / (u - d))\n",
+        "C = S*D + B\n",
+        "C, D, B"
+      ],
+      "id": "edb82c6b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Equivalently, we can solve $p^{\\ast}$ and use the risk-neutral approach.\n",
+        "\n",
+        "<br>\n",
+        "\n",
+        "$$\n",
+        "C_{0} = e^{-rh} \\left(p^{\\ast} \\times C_{u} + (1 - p^{\\ast}) \\times C_{d}\\right)\n",
+        "$$\n",
+        "\n",
+        "<br>\n"
+      ],
+      "id": "3db349e7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "p_star = (np.exp(r - q)*h - d) / (u - d)\n",
+        "C = np.exp(-r*h) * (Cu*p_star + Cd*(1.0 - p_star))\n",
+        "C"
+      ],
+      "id": "cd1f2094",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Pricing the Equivalent Put Option\n",
+        "\n",
+        "**NB:** the only thing we have to do is substitute the put payoff function in step 2. \n"
+      ],
+      "id": "5b980256"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "Pu = put_payoff(Su, K)\n",
+        "Pd = put_payoff(Sd, K)\n",
+        "Pu, Pd"
+      ],
+      "id": "a89100e1",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "D = (Pu - Pd) / (Su - Sd)\n",
+        "B = np.exp(-r*h) * ((u*Pd - d*Pu) / (u - d))\n",
+        "P = S*D + B\n",
+        "P, D, B"
+      ],
+      "id": "d195ad3b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "**NB:** we can verify this with put-call parity.\n",
+        "\n",
+        "<br>\n",
+        "\n",
+        "$$\n",
+        "C(T,K) - P(T,K) = e^{-rh}(F_{0,T} - K)\n",
+        "$$\n",
+        "\n",
+        "which when we solve for $P(T,K)$ gives us:\n",
+        "\n",
+        "$$\n",
+        "P(T,K) = C(T,K) - e^{-rh}(F_{0,T} - K)\n",
+        "$$\n"
+      ],
+      "id": "5c0fdcbc"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "F = S*np.exp(r*h)\n",
+        "C - np.exp(-r*h)*(F - K)"
+      ],
+      "id": "e3e92519",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Pricing an American Call in the One-Period Model\n"
+      ],
+      "id": "fa23d0a7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "C_am = np.maximum(C, call_payoff(S, K))\n",
+        "C_am"
+      ],
+      "id": "f86f08d0",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Users/tjb/Library/Python/3.9/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
