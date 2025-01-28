@@ -40,7 +40,7 @@ execute:
   - The following figure depicts possible stock prices over 1 year, i.e., a binomial tree
   
 :::{.center}
-![](../../../images/mcdonald/Chp10/Figure10-1.png){width=700px height=200px}
+![](../../images/mcdonald/Chp10/Figure10-1.png){width=700px height=200px}
 :::
 
 ## Computing the Option Price
@@ -121,7 +121,7 @@ execute:
 ## The Binomial Solution (cont'd)
 
 :::{.center}
-![](../../../images/mcdonald/Chp10/trees.png){width=700px height=200px}
+![](../../images/mcdonald/Chp10/trees.png){width=700px height=200px}
 :::
 
 - Note that $u (d)$ in the stock price tree is interpreted as one plus the rate of capital gain (loss) on the stock if it goes up (down)
@@ -204,7 +204,7 @@ $$
 <br>
 
 :::{.center}
-![](../../../images/mcdonald/Chp10/Figure10-2.png)
+![](../../images/mcdonald/Chp10/Figure10-2.png)
 :::
 
 
@@ -367,7 +367,7 @@ $$
 <br>
 
 :::{.center}
-![](../../../images/mcdonald/Chp10/Table10-1.png){width=750px height=500px}
+![](../../images/mcdonald/Chp10/Table10-1.png){width=750px height=500px}
 :::
 
 
@@ -436,5 +436,5 @@ $$
 <br>
 
 :::{.center}
-![](../../../images/mcdonald/Chp10/Figure10-3.png)
+![](../../images/mcdonald/Chp10/Figure10-3.png)
 :::
