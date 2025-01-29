@@ -1,0 +1,27 @@
+---
+title: "Binomial Option Pricing: Selected Topics"
+subtitle: |
+  | McDonald Chapter 11
+  | DATA 5695/6695 
+author: Tyler J. Brough
+date: 2025-01-09
+title-slide-attributes:
+  data-background-color: "#486790"
+format: 
+  revealjs:
+    theme: tjb.scss      # Modified simple theme.
+    slide-number: c/t    # Numbered slides current/total.
+    self-contained: true # Render to a single HTML file.
+execute:
+  eval: false
+  echo: true
+---
+
+
+# McDonald Chapter 11
+
+## 
+
+<br>
+
+Hello, World!
