@@ -1,0 +1,124 @@
+---
+title: One-Period Binomial Option Pricing Algorithm
+jupyter: python3
+---
+
+
+```{python}
+import numpy as np
+```
+
+```{python}
+def call_payoff(spot, strike):
+    return np.maximum(spot - strike, 0.0)
+```
+
+```{python}
+def put_payoff(spot, strike):
+    return np.maximum(strike - spot, 0.0)
+```
+
+### Step 0: Gather Data & Initialize Variables
+
+```{python}
+# Problem setup
+S = 41.0
+K = 40.0
+r = 0.08
+q = 0.0 
+v = 0.30
+h = 1.0
+```
+
+### Step 1: Build the Forward Tree
+
+```{python}
+u = np.exp((r - q)*h + v*np.sqrt(h))
+d = np.exp((r - q)*h - v*np.sqrt(h))
+```
+
+```{python}
+u, d
+```
+
+```{python}
+Su, Sd = u*S, d*S
+Su, Sd
+```
+
+### Step 2: Apply the Payoff Function (Boundary Condition)
+
+```{python}
+Cu = call_payoff(Su, K)
+Cd = call_payoff(Sd, K)
+Cu, Cd
+```
+
+### Step 3: Solve, for $\Delta$, $B$, and $C_{0}$
+
+```{python}
+D = (Cu - Cd) / (Su - Sd)
+B = np.exp(-r*h) * ((u*Cd - d*Cu) / (u - d))
+C = S*D + B
+C, D, B
+```
+
+Equivalently, we can solve $p^{\ast}$ and use the risk-neutral approach.
+
+<br>
+
+$$
+C_{0} = e^{-rh} \left(p^{\ast} \times C_{u} + (1 - p^{\ast}) \times C_{d}\right)
+$$
+
+<br>
+
+```{python}
+p_star = (np.exp(r - q)*h - d) / (u - d)
+C = np.exp(-r*h) * (Cu*p_star + Cd*(1.0 - p_star))
+C
+```
+
+## Pricing the Equivalent Put Option
+
+**NB:** the only thing we have to do is substitute the put payoff function in step 2. 
+
+```{python}
+Pu = put_payoff(Su, K)
+Pd = put_payoff(Sd, K)
+Pu, Pd
+```
+
+```{python}
+D = (Pu - Pd) / (Su - Sd)
+B = np.exp(-r*h) * ((u*Pd - d*Pu) / (u - d))
+P = S*D + B
+P, D, B
+```
+
+**NB:** we can verify this with put-call parity.
+
+<br>
+
+$$
+C(T,K) - P(T,K) = e^{-rh}(F_{0,T} - K)
+$$
+
+which when we solve for $P(T,K)$ gives us:
+
+$$
+P(T,K) = C(T,K) - e^{-rh}(F_{0,T} - K)
+$$
+
+```{python}
+F = S*np.exp(r*h)
+C - np.exp(-r*h)*(F - K)
+```
+
+## Pricing an American Call in the One-Period Model
+
+```{python}
+C_am = np.maximum(C, call_payoff(S, K))
+C_am
+```
+
