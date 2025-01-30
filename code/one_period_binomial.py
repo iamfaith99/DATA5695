@@ -40,16 +40,18 @@ def single_period_binomial(spot: float, strike: float, volatility: float, rate: 
     uS, dS = u*spot, d*spot
 
     # apply the payoff function 
-    f_u = payoff(uS)
-    f_d = payoff(dS) 
+    fu = payoff(uS)
+    fd = payoff(dS) 
 
     # solve for D and B
-    D = (f_u - f_d) / (uS - dS)
-    B = np.exp(-rate * expiry) * ((u*f_d - d*f_u) / (u - d))
+    #D = (f_u - f_d) / (uS - dS)
+    #B = np.exp(-rate * expiry) * ((u*f_d - d*f_u) / (u - d))
+
+    # solve for the risk-neutral probabilities
+    pu = ((np.exp(rate - dividend)*expiry - d) / (u - d))
+    pd = 1.0 - pu
     
     # solve for the option premium
-    f = spot*D + B
+    f0 = np.exp(-rate * expiry) * (pu*fu + pd*fd)
 
-    return f, D, B
-
-
+    return f0
