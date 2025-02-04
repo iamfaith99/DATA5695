@@ -4,7 +4,7 @@ subtitle: |
   | McDonald Chapter 11
   | DATA 5695/6695 
 author: Tyler J. Brough
-date: 2025-01-09
+date: 2025-02-04
 title-slide-attributes:
   data-background-color: "#486790"
 format: 
@@ -18,10 +18,80 @@ execute:
 ---
 
 
-# McDonald Chapter 11
+# McDonald Chapter 11 Binomial Option Pricing: :Selected Topics 
 
-## 
+## Understanding Early Exercise
 
 <br>
 
-Hello, World!
+- Options may be rationally exercised prior to expiration
+- By exercising, the option holder
+  - Receives the stock and thus receives dividends
+  - Pays the strike price prior to expiration (this has an interest cost)
+  - Loses the insurance implicit in the call against the possibility that the stock price will be less than the strike price at expiration
+
+
+## Understanding Early Exercise
+
+- If volatility is zero, the value of insurance is zero. Then, it is optimal to defer exercise as long as interest savings on the strike exceed dividends lost
+
+$$
+rK > \delta S
+$$
+
+- Therefore, it is optimal to exercise when
+
+$$
+S > \frac{rK}{\delta}
+$$
+
+- *NB:* in the special case when $r = \delta$ and $\sigma = 0$, any ITM option should be exercised immediately
+
+- When volatility is positive, the implicit insurance has value that varies with time to expiration
+
+## Understanding Early Exercise (Cont'd)
+
+- The following graph displays the price, above which early exercise is optimal for a 5-year call option with $K =\$100$, $r = 5\%$, and $\delta = 5\%$
+
+:::{.center}
+![](../../images/mcdonald/Chp11/Figure11-1.png){width=950px height=450px}
+:::
+
+## Understanding Early Exercise (Cont'd)
+
+- The following graph displays the price, below which early exercise is optimal for a 5-year put option with $K = \$100$, $r = 5\%$, and $\delta = 5\%$
+
+:::{.center}
+![](../../images/mcdonald/Chp11/Figure11-2.png){width=950px height=450px}
+:::
+
+## Understanding Risk-Neutral Pricing
+
+<br>
+
+- A risk-neutral investor is indifferent between a sure thing and a risky bet with an expected payoff equal to the value of the sure thing
+
+- $p^{\ast}$ is the risk-neutral probability that the stock price will go up 
+
+
+## Understanding Risk-Neutral Pricing (Cont'd)
+
+<br>
+
+- The option pricing formula can be said to price options as if investors are risk-neutral
+
+- Note that we are not assuming that investors are actually risk-neutral, and that risky assets are actually expected to earn the risk-free rate of return
+
+<br>
+
+- ***Just that a world of perfect synthetic replication and costless/frictionless arbitrage is isomorphic to such a world!***
+
+## Pricing an Option Using Real Probabilities
+
+<br>
+
+- Is option pricing consistent with standard discounted cash flow calculations?
+
+- Yes! However, discounted cash flow is not used in practice to price options
+
+- This is because it is necessary to compute the option price in order to compute the correct discount rate
