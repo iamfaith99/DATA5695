@@ -73,8 +73,11 @@ def european_multi_period_binomial(
     d = np.exp((rate - dividend)*h - volatility*np.sqrt(h))
     spot_prices = np.zeros(nodes)
 
-    for i in range(nodes):
-        spot_prices[i] = (u**(num_periods-i)) * (d**i) * spot
+    i = np.arange(nodes)
+    #for i in range(nodes):
+    #    spot_prices[i] = (u**(num_periods-i)) * (d**i) * spot
+    spot_prices = (u**(num_periods-i)) * (d**i) * spot
+
 
     # Calculate the terminal option values
     payoffs = payoff(spot_prices)
@@ -83,8 +86,8 @@ def european_multi_period_binomial(
     p_star = (np.exp((rate - dividend)*h) - d) / (u - d)
     probs = np.zeros(nodes)
 
-    for i in range(nodes):
-        probs[i] = binom.pmf(num_periods-i, num_periods, p_star)
+    #for i in range(nodes):
+    probs = binom.pmf(num_periods-i, num_periods, p_star)
 
     # Calculate the expected (rnp) option payoff at expiry and discount it
     C0 = np.exp(-rate * expiry) * np.dot(payoffs, probs)
