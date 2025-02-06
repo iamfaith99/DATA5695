@@ -465,3 +465,4 @@ $$
 
 :::{.center}
 ![](../../images/mcdonald/Chp10/Figure10-7.png){width=1000px height=600px}
+:::
