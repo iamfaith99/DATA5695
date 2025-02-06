@@ -438,3 +438,31 @@ $$
 :::{.center}
 ![](../../images/mcdonald/Chp10/Figure10-3.png)
 :::
+
+
+## A Two-Period European Call 
+
+<br>
+
+:::{.center}
+![](../../images/mcdonald/Chp10/Figure10-4.png)
+:::
+
+
+## Many Binomial Periods 
+
+:::{.center}
+![](../../images/mcdonald/Chp10/Figure10-5.png){width=1000px height=600px}
+:::
+
+## Put Options 
+
+:::{.center}
+![](../../images/mcdonald/Chp10/Figure10-6.png){width=1000px height=600px}
+:::
+
+## American Options 
+
+:::{.center}
+![](../../images/mcdonald/Chp10/Figure10-7.png){width=1000px height=600px}
+:::
