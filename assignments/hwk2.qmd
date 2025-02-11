@@ -6,8 +6,13 @@ subtitle: "DATA 5695/6695: Predictive Methods for FinTech"
 ## Chapter 10 Problems 
 
 - 10.1, 10.2, 10.3, 10.4, 10.5
+
 - 10.12, 10.13,  
 
+- Using the code provided in `binomial.py` please do the following: 
+  - Price both a call and a put for the inputs in Figure 10.3 
+  - Using a loop price the call/put with number of steps from 1 to 200 by steps of 20
+  - Print the option price and the number of steps
 
 ## Chapter 11 Problems 
 
