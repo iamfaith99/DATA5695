@@ -1,0 +1,14 @@
+---
+title: "Homework 2" 
+subtitle: "DATA 5695/6695: Predictive Methods for FinTech"
+---
+
+## Chapter 10 Problems 
+
+- 10.1, 10.2, 10.3, 10.4, 10.5
+- 10.12, 10.13,  
+
+
+## Chapter 11 Problems 
+
+- TBA
