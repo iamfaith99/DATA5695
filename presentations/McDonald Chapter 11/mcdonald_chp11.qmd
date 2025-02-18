@@ -17,8 +17,10 @@ execute:
   echo: true
 ---
 
+# McDonald Chapter 11 Binomial Option Pricing: Selected Topics 
 
-# McDonald Chapter 11 Binomial Option Pricing: :Selected Topics 
+
+# Understanding Early Exercise 
 
 ## Understanding Early Exercise
 
@@ -65,11 +67,14 @@ $$
 ![](../../images/mcdonald/Chp11/Figure11-2.png){width=950px height=450px}
 :::
 
+
+# Understanding Risk-Neutral Pricing
+
 ## Understanding Risk-Neutral Pricing
 
 <br>
 
-- A risk-neutral investor is indifferent between a sure thing and a risky bet with an expected payoff equal to the value of the sure thing
+- A **risk-neutral** investor is indifferent between a sure thing and a risky bet with an expected payoff equal to the value of the sure thing
 
 - $p^{\ast}$ is the risk-neutral probability that the stock price will go up 
 
@@ -78,7 +83,7 @@ $$
 
 <br>
 
-- The option pricing formula can be said to price options as if investors are risk-neutral
+- The option pricing formula can be said to price options ***as if*** investors are risk-neutral
 
 - Note that we are not assuming that investors are actually risk-neutral, and that risky assets are actually expected to earn the risk-free rate of return
 
@@ -95,3 +100,211 @@ $$
 - Yes! However, discounted cash flow is not used in practice to price options
 
 - This is because it is necessary to compute the option price in order to compute the correct discount rate
+
+
+## Pricing an Option Using Real Probabilities (cont'd)
+
+<br>
+
+- Suppose that the continuously compounded expected return on the stock is $\alpha$ and that the stock does not pay dividends
+
+- If $p$ is the true probability of the stock going up, $p$ must be consistent with $u, d$, and $\alpha$
+
+$$
+puS + (1-p)dS = e^{\alpha h} S
+$$
+
+- Solving for $p$ gives us
+
+$$
+p = \frac{e^{\alpha h} - d}{u - d}
+$$
+
+
+## Pricing an Option Using Real Probabilities (cont'd)
+
+<br>
+
+- Using $p$, the actual expected payoff to the option one period hence is
+
+$$
+pC_{u} + (1-p)C_{d} = \frac{e^{\alpha h} - d}{u - d}C_{u} + \frac{u - e^{\alpha h}}{u - d}C_{d}
+$$
+
+- At what rate do we discount this expected payoff?
+  - It is not correct to discount the option at the expected return on the stock, $\alpha$, because the option is equivalent to a leveraged investment in the stock and hence is riskier than the stock
+
+
+## Pricing an Option Using Real Probabilities (cont'd)
+
+<br>
+
+- Denote the appropriate per-period discount rate for the option as $\gamma$
+
+- Since an option is equivalent to holding a portfolio consisting of $\Delta$ shares of stock and $B$ bonds, the expected return on this portfolio is
+
+$$
+e^{\gamma h} = \frac{S \Delta}{S \Delta + B} e^{\alpha h} + \frac{B}{S \Delta + B} e^{r h}
+$$
+
+<br>
+
+* **NB:** this is like a WACC for the option contract. 
+  
+
+## Pricing an Option Using Real Probabilities (cont'd)
+
+<br>
+
+- We can now compute the option price as the expected option payoff, equation(11.5), discounted at the appropriate discount rate, given by equation (11.6). This gives
+
+$$
+C = e^{-\gamma h} \left[\frac{e^{\alpha h} - d}{u - d} C_{u} + \frac{u - e^{\alpha h}}{u - d} C_{d} \right]
+$$
+
+
+## Pricing an Option Using Real Probabilities (cont'd)
+
+<br>
+
+- It turns out that this gives us the same option price as performing the risk-neutral calculation
+
+  - Note that it does not matter whether we have the "correct" value of $\alpha$ to start with
+
+  - Any consistent pair of $\alpha$ and $\gamma$ will give the same option price
+
+  - Risk-neutral pricing is valuable because setting $\alpha = r$ results in the simplest pricing procedure.
+
+
+# One-Period Numerical Example
+
+
+## One-Period Numerical Example (Figure 11.3, p. 328)
+
+<br>
+
+- Let $\alpha = 15\%$ per annum (just pulled out of your finger!)
+
+- Let $S = \$41.0$, $K = \$40.0$, $r = 8\%$ per annum, $\sigma = 30\%$ per annum, $\delta = 0$, and $T = 1$ year
+
+
+## One-Period Example (Cont'd)
+
+<br>
+
+```{python}
+#| echo: true
+#| eval: true
+
+import numpy as np
+S, K, r, v, q, T, n = 41.0, 40.0, 0.08, 0.30, 0.0, 1.0, 1.0
+h = T / n
+
+u = np.exp((r - q)*h + v*np.sqrt(h))
+d = np.exp((r - q)*h - v*np.sqrt(h))
+u, d
+```
+
+
+## One-Period Example (Cont'd) 
+
+<br>
+
+The "true" or "physical" probability is then:
+
+```{python}
+#| echo: true
+#| eval: true
+
+a = 0.15
+p = (np.exp(a*h) - d)/ (u - d)
+p
+```
+
+<br>
+
+The option payoffs at expiry are:
+
+```{python}
+#| echo: true
+#| eval: true
+
+Cu = np.maximum(u*S - K, 0.0)
+Cd = np.maximum(d*S - K, 0.0)
+Cu, Cd
+```
+
+
+## One-Period Example (Cont'd) 
+
+<br>
+
+The expected option payoff at expiry under the physical density is:
+
+```{python}
+#| echo: true
+#| eval: true
+
+CT_hat = p*Cu + (1.0 - p)*Cd
+CT_hat
+```
+
+<br>
+
+**Q:** But how to get its present value? We cannot use $r$!
+
+
+## One-Period Example (Cont'd) 
+
+<br>
+
+The option weighted-average cost of capital (or risky discount rate):
+
+- $\Delta$ and $B$ do not depend upon $\alpha$ or $p$:
+  
+```{python}
+#| echo: true
+#| eval: true
+
+D = np.exp(-q * h) * ((Cu - Cd) / (u*S - d*S))
+B = np.exp(-r * h) * ((u*Cd - d*Cu) / (u - d))
+D, B
+```
+
+<br>
+
+So now we can compute the portfolio weights:
+
+```{python}
+#| echo: true
+#| eval: true
+
+w1 = (D*S) / (D*S + B)
+w2 = B / (D*S + B) 
+
+wacc = w1*np.exp(a*h) + w2*np.exp(r*h)
+wacc
+
+gamma = np.log(wacc)
+gamma
+```
+
+
+
+## One-Period Example (Cont'd) 
+
+<br>
+
+So with $\gamma$ in hand, we can now take the present value:
+
+```{python}
+#| echo: true
+#| eval: true
+
+C0 = np.exp(-gamma*h) * CT_hat
+C0
+```
+
+<br>
+
+**NB:** This is the same answer we got with both the no-arbitrage and risk-neutral forms of the model
