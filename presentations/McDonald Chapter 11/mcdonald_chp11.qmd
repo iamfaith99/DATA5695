@@ -4,7 +4,7 @@ subtitle: |
   | McDonald Chapter 11
   | DATA 5695/6695 
 author: Tyler J. Brough
-date: 2025-02-04
+date: 2025-02-18
 title-slide-attributes:
   data-background-color: "#486790"
 format: 
@@ -308,3 +308,225 @@ C0
 <br>
 
 **NB:** This is the same answer we got with both the no-arbitrage and risk-neutral forms of the model
+
+
+# The Binomial Tree and Lognormality
+
+## The Binomial Tree and Lognormality
+
+<br>
+
+- The usefulness of the binomial pricing model hinges on the binomial tree providing a reasonable representation of the stock price distribution
+
+- The binomial tree approximates a lognormal distribution
+
+
+## The Random Walk Model
+
+<br>
+
+- It is sometimes said that stock prices follow a random walk
+
+- Imagine that we flip a coin repeatedly
+
+  - Let the random variable $Y$ denote the outcome of the flip
+
+  - If the coin lands displaying a head, $Y = 1$; otherwise, $Y = -1$
+
+  - If the probability of a head is $50\%$, we say the coin is fair
+
+  - After $n$ flips, with the $i^{\text{th}}$ flip denoted $Y_{i}$, the cumulative total, $Z_{n}$, is
+
+$$
+Z_{n} = \sum_{i=1}^{n} Y_{i}
+$$
+
+- It turns out that the more times we flip, on average the farther we will move from where we start
+
+
+## The Random Walk Model (cont'd)
+
+<br>
+
+- We can represent the process followed by $Z_{n}$ in term of the change in $Z_{n}$
+
+$$
+Z_{n} - Z_{n-1} = Y_{n} \\
+$$
+
+<br>
+
+$$
+\begin{align}
+\text{Heads:} \quad & Z_{n} - Z_{n-1} = +1 \\
+\text{Tails:} \quad & Z_{n} - Z_{n-1} = -1
+\end{align}
+$$
+
+
+## The Random Walk Model (cont'd)
+
+- A random walk, where with heads, the change in $Z$ is 1, and with tails, the change in $Z$ is $-1$
+
+:::{.center}
+![](../../images/mcdonald/Chp11/Figure11-5.png){width=850px height=525px}
+:::
+
+
+## Simulating a Binomial Random Walk Process
+
+```{python}
+#| echo: true
+#| eval: true
+import numpy as np
+import matplotlib.pyplot as plt 
+
+# Simulate the coin flips
+X = 2 * np.random.binomial(n=1, p=0.5, size=100_000) - 1
+Z = np.cumsum(X)
+```
+
+```{python}
+#| echo: false
+#| eval: true
+# Figure for Random Walk
+plt.figure(figsize=(8, 4))
+plt.plot(Z, lw=1)
+plt.title("Cumulative Z (Random Walk)")
+plt.xlabel("Number of coin flips")
+plt.ylabel("Z")
+plt.grid(True)  # turn on both horizontal and vertical grid lines
+plt.tight_layout()
+plt.show()
+```
+
+## Simulating Binomial Prices
+
+```{python}
+#| echo: true
+#| eval: true
+S, r, v, T, N, h = 100.0, 0.06, 0.30, 1.0, 10_000, 0.0001
+u = np.exp(r*h + v*np.sqrt(h))
+d = np.exp(r*h - v*np.sqrt(h))
+p_star = (np.exp(r*h) - d) / (u - d)
+y, y[0] = np.random.choice([u, d], p=[p_star, 1.0 - p_star], size=N+1), S
+spot = np.cumprod(y) 
+```
+
+```{python}
+#| echo: false
+#| eval: true
+# Figure for Random Walk
+plt.figure(figsize=(8, 4))
+plt.plot(spot, lw=1)
+plt.title("Stock Price")
+plt.xlabel("Time (years)")
+plt.ylabel("Dollars ($)")
+plt.grid(True)  # turn on both horizontal and vertical grid lines
+plt.tight_layout()
+plt.show()
+```
+
+
+## The Random Walk Model (cont'd)
+
+<br>
+
+- The idea that asset prices should follow a random walk was articulated in Samuelson (1965)
+  - [Proof That Properly Anticipated Prices Fluctuate Randomly](https://www.worldscientific.com/doi/abs/10.1142/9789814566926_0002)
+
+- In efficient markets, an asset price should reflect all available information. In response to new information the price is equally likely to move up or down, as with the coin flip
+
+- The price after a period of time is the initial price plus the cumulative up and down movements due to informational surprises
+
+
+## Modeling Stock Prices As a Random Walk
+
+<br>
+
+- The above description of a random walk is not a satisfactory description of stock price movements. There are at least three problems with this model
+
+  - If by chance we get enough cumulative down movements, the stock price will become negative
+
+  - The magnitude of the move (\$1) should depend upon how quickly the coin flips occur and the level of the stock price
+
+  - The stock, on average, should have a positive return. The random walk model taken literally does not permit this
+
+- The binomial model is a variant of the random walk model that solves all of these problems at once
+
+
+## The Binomial Model
+
+$$
+S_{t+h} = S_{t} e^{(r - \delta)h \pm \sigma\sqrt{h}}
+$$
+
+- Taking logs, we obtain
+
+$$
+\ln\left(S_{t+h} / S_{t}\right) = (r - \delta)h \pm \sigma\sqrt{h} \quad\quad \text{(11.11)}
+$$
+
+  - Since $\ln\left(S_{t+k} / S_{t}\right)$ is the continuously compounded return from $t$ to $t+h$, the binomial model is simply a particular way to model the continuously compounded return
+
+  - That return has two parts:
+    - The drift: $(r - \delta) h$ generates the upward trend (all else equal)
+    - The diffusion: $\sigma\sqrt{h}$) which is uncertain and generates the up and down moves
+
+
+## The Binomial Model (cont'd)
+
+<br>
+
+- Equation (11.11) solves the three problems in the random walk
+
+  - The stock price cannot become negative
+
+  - As $h$ gets smaller, up and down moves get smaller
+
+  - There is a $(r-\delta) h$ term, and we can choose the probability of an up move, so we can guarantee that the expected change in the stock price is positive
+
+
+## Lognormality and the Binomial Model
+
+<br>
+
+- The binomial tree approximates a lognormal distribution, which is commonly used to model stock prices
+
+- The lognormal distribution is the probability distribution that arises from the assumption that continuously compounded returns on the stock are normally distributed
+
+- With the lognormal distribution, the stock price is positive, and the distribution is skewed to the right, that is, there is a chance that extremely high stock prices will occur
+
+
+## Lognormality and the Binomial Model (cont'd)
+
+- The binomial model implicitly assigns probabilities to the various nodes.
+
+<br>
+
+:::{.center}
+![](../../images/mcdonald/Chp11/Figure11-6.png){width=950px height=450px}
+:::
+
+
+## Lognormality and the Binomial Model (cont'd)
+
+- The following graph compares the probability distribution for a 25-period binomial tree with the corresponding lognormal distribution
+
+<br>
+
+:::{.center}
+![](../../images/mcdonald/Chp11/Figure11-8.png){width=950px height=450px}
+:::
+
+
+## Is the Binomial Model Realistic?
+
+<br>
+
+- The binomial model is a form of the random walk model, adapted to modeling stock prices. The lognormal random walk model in this section assumes among other things, that
+  - Volatility is constant
+  - "Large" stock price movements do not occur
+  - Returns are independent over time
+
+- All of these assumptions appear to be violated in the data
