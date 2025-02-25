@@ -1,0 +1,281 @@
+---
+title: "The Black-Scholes Formula"
+subtitle: |
+  | McDonald Chapter 12
+  | DATA 5695/6695 
+author: Tyler J. Brough
+date: 2025-02-25
+title-slide-attributes:
+  data-background-color: "#486790"
+format: 
+  revealjs:
+    theme: jike.scss      # Modified simple theme.
+    slide-number: c/t    # Numbered slides current/total.
+    self-contained: true # Render to a single HTML file.
+execute:
+  eval: false
+  echo: true
+---
+
+# McDonald Chapter 12: The Black-Scholes Formula
+
+## The Black-Scholes Formula 
+
+<br>
+
+- The Black-Scholes formula is a limiting case of the binomial formula (infinitely many periods) for the price of a European option.
+
+- Consider an European call (or put) option written on a stock
+
+- Assume that the stock pays dividend at the continuous rate $\delta$
+
+## Black-Scholes Formula (cont'd)
+
+<br>
+
+- Call Option price
+
+$$
+C(S, K, \sigma, r, T, \delta) = Se^{-\delta T} N(d_{1}) - Ke^{-r T} N(d_{2})
+$$
+
+- Put Option price
+
+$$
+P(S, K, \sigma, r, T, \delta) = Ke^{-r T} N(-d_{2}) - Se^{-\delta T} N(-d_{1})
+$$
+
+where
+
+$$
+\begin{aligned}
+d_{1} & = \frac{\ln(S / K) + (r - \delta + \frac{1}{2} \sigma^{2}) T}{\sigma \sqrt{T}} \\
+d_{2} & = d_{1} - \sigma\sqrt{T}
+\end{aligned}
+$$
+
+
+## Black-Scholes Assumptions
+
+<br>
+
+- Assumptions about stock return distribution
+
+- Continuously compounded returns on the stock are normally distributed and independent over time (no "jumps")
+
+- The volatility of continuously compounded returns is known and constant
+
+- Future dividends are known, either as dollar amount or as a fixed dividend yield
+
+
+## Black-Scholes Assumptions (cont'd)
+
+<br>
+
+- Assumptions about the economic environment
+
+- The risk-free rate is known and constant
+
+- There are no transaction costs or taxes
+
+- It is possible to short-sell costlessly and to borrow at the risk-free rate
+
+
+## Option Greeks
+
+<br>
+
+- What happens to the option price when one and only one input changes?
+
+- Delta ( $\Delta$ ): change in option price when stock price increases by $\$ 1$
+
+- Gamma ( $\Gamma$ ): change in delta when option price increases by $\$ 1$
+
+- Vega: change in option price when volatility increases by $1 \%$
+
+- Theta $(\theta)$ : change in option price when time to maturity decreases by 1 day
+
+- Rho $(\rho)$ : change in option price when interest rate increases by $1 \%$
+
+- Greek measures for portfolios
+
+- The Greek measure of a portfolio is weighted average of Greeks of individual portfolio components
+
+$$
+\Delta_{\text{portfolio }} = \sum_{i=1}^{n} \omega_{i} \Delta_{i}
+$$
+
+
+## Implied Volatility
+
+<br>
+
+- Volatility is unobservable
+
+- Option prices, particularly for near-the-money options, can be quite sensitive to volatility
+
+- One approach is to compute historical volatility using the history of returns
+
+- A problem with historical volatility is that expected future volatility can be different from historical volatility.
+
+- Alternatively, we can calculate implied volatility, which is the volatility that, when put into a pricing formula (typically Black-Scholes), yields the observed option price.
+
+
+## Implied Volatility (cont'd)
+
+<br>
+
+- In practice implied volatilities of itm, atm, and out-of-the money options are generally different
+
+- A volatility smile refers to when volatility is symmetric, with volatility lowest for at-themoney options, and high for in-the-money and out-of-the-money options
+
+- A difference in volatilities between in-the-money and out-of-the-money options is referred to as a volatility skew
+
+
+
+## Implied Volatility (cont'd)
+
+:::{.center}
+![](../../images/mcdonald/Chp12/Figure12-9.png){width=850px height=600px}
+:::
+
+
+# Appendices
+
+## Appendix 12.A: The Standard Normal Distribution 
+
+<br>
+
+The *standard normal probability density function* is given by 
+
+$$
+\phi(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^{2}}
+$$
+
+The *cumulative standard normal distribution function*, evaluated at point $x$, for example, tells us the probability that a number randomly drawn from the standard normal distribution will fall below $x$, 1. 
+
+$$
+N(x) = \int_{-\infty}^{x} \phi(x)dx \equiv \int_{-\infty}^{x} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^{2}} dx 
+$$
+
+The `scipy` module in Python computes this as: `scipy.stats.norm.cdf`
+
+
+## Appendix 12.B: Formulas for Option Greeks 
+
+<br>
+
+### **Delta** ($\Delta$) 
+
+<br>
+
+Delta measures the change in the option price for a $\$1$ change in the spot price: 
+
+$$
+\begin{aligned}
+\text{Call delta } &= \frac{\partial C(S, K, \sigma, r, T - t, \delta)}{\partial S} = e^{-\delta (T - t)} N(d_{1}) \\
+\text{Put  delta } &= \frac{\partial P(S, K, \sigma, r, T - t, \delta)}{\partial S} = -e^{-\delta (T - t)} N(-d_{1})
+\end{aligned}
+$$ 
+
+
+## Appendix 12.B: Formulas for Option Greeks (cont'd) 
+
+<br>
+
+### **Gamma** ($\Gamma$) 
+
+<br>
+
+Gamma measures the change in delta when the spot price changes:
+
+$$
+\begin{aligned}
+\text{Call gamma } &= \frac{\partial^{2} C(S, K, \sigma, r, T - t, \delta)}{\partial S^{2}} = \frac{e^{-\delta (T - t)} N^{\prime}(d_{1})}{S\sigma\sqrt{(T - t)}} \\
+\text{Put  gamma } &= \text{Call gamma}
+\end{aligned}
+$$
+
+<br>
+
+The second equation follows from put-call parity.
+
+
+## Appendix 12.B: Formulas for Option Greeks (cont'd) 
+
+<br>
+
+### **Theta** ($\Theta$)
+
+Theta measures the change in the option price with respect to calendar time $(t)$, holding fixed time to expiration $(T)$ :
+
+$$
+\begin{aligned}
+\text{Call theta } &= \frac{\partial C(S, K, \sigma, r, T - t, \delta)}{\partial t} \\
+                   &= \delta Se^{-\delta (T - t)} N(d_{1}) - rKe^{-r (T - t)} N(d_{2}) - \frac{Ke^{-r (T - t)} N^{\prime}(d_{2}) \sigma}{2 \sqrt{(T - t)}} \\
+\text{Put  theta } &= \frac{\partial P(S, K, \sigma, r, T - t, \delta)}{\partial t} \\
+                   &= \text{Call theta } + rKe^{-r (T - t)} - \delta Se^{-\delta (T - t)}
+\end{aligned}
+$$
+
+If time to expiration is measured in years, theta will be the annualized change in the option value. To obtain a per-day theta, divide by 365.
+
+
+## Appendix 12.B: Formulas for Option Greeks (cont'd) 
+
+<br>
+
+### **Vega**
+
+<br>
+
+Vega measures the change in the option price when volatility changes. Some writers also use the terms lambda or kappa to refer to this measure:
+
+$$
+\begin{aligned}
+\text{Call vega } &= \frac{\partial C(S, K, \sigma, r, T - t, \delta)}{\partial \sigma} = Se^{-\delta(T-t)} N^{\prime}(d_{1}) \sqrt{(T - t)} \\
+\text{Put  vega } &= \frac{\partial P(S, K, \sigma, r, T-t, \delta)}{\partial \sigma}   = \text{ Call vega}
+\end{aligned}
+$$
+
+<br>
+
+It is common to report vega as the change in the option price per percentage point change in the volatility. This requires dividing the vega formula above by 100.
+
+
+## Appendix 12.B: Formulas for Option Greeks (cont'd)
+
+<br>
+
+### **Rho** ($\rho$)
+
+Rho is the partial derivative of the option price with respect to the interest rate:
+
+$$
+\begin{aligned}
+\text{Call rho } &= \frac{\partial C(S, K, \sigma, r, T - t, \delta)}{\partial r} =  (T - t) K e^{-r (T - t)} N(d_{2}) \\
+\text{Put  rho } &= \frac{\partial P(S, K, \sigma, r, T - t, \delta)}{\partial r} = -(T - t) K e^{-r (T - t)} N(-d_{2})
+\end{aligned}
+$$
+
+These expressions for rho assume a change in $r$ of 1.0. We are typically interested in evaluating the effect of a change of 0.01 (100 basis points) or 0.0001 (1 basis point). To report rho as a change per percentage point in the interest rate, divide this measure by 100. To interpret it as a change per basis point, divide by 10,000.
+
+
+## Appendix 12.B: Formulas for Option Greeks (cont'd)
+
+<br>
+
+### **Psi** ($\psi$)
+
+<br>
+
+Psi is the partial derivative of the option price with respect to the continuous dividend yield:
+
+$$
+\begin{aligned}
+\text{Call psi } &= \frac{\partial C(S, K, \sigma, r, T - t, \delta)}{\partial \delta} = -(T - t) S e^{-\delta (T - t)} N(d_{1}) \\
+\text{Put  psi } &= \frac{\partial P(S, K, \sigma, r, T - t, \delta)}{\partial \delta} =  (T - t) S e^{-\delta (T - t)} N(-d_{1})
+\end{aligned}
+$$
+
+To interpret psi as a price change per percentage point change in the dividend yield, divide by 100.
