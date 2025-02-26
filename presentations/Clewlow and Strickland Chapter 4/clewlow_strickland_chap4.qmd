@@ -1,0 +1,82 @@
+---
+title: "Monte Carlo Simulation"
+subtitle: |
+  | Clewlow and Strickland Chapter 4
+  | DATA 5695/6695 
+author: Tyler J. Brough
+date: 2025-02-25
+title-slide-attributes:
+  data-background-color: "#486790"
+format: 
+  revealjs:
+    theme: tjb.scss      # Modified simple theme.
+    slide-number: c/t    # Numbered slides current/total.
+    self-contained: true # Render to a single HTML file.
+execute:
+  eval: false
+  echo: true
+---
+
+# Clewlow and Strickland: Chapter 4 Monte Carlo Simulation 
+
+## Valuation by Simulation 
+
+<br>
+
+- We have previously shown that the value of an option is the risk-neutral expectation of its discounted payoff 
+
+- In the binomial model this was seen in the single-period model
+
+$$
+C_{0} = e^{-rh}\left[p^{\ast} C_{u} + (1 - p^{\ast})C_{d}\right]
+$$
+
+- The term inside the brackets is the binomial expected value under the risk-neutral distribution 
+
+- This suggests a path forward for models beyond the binomial model
+
+- We can obtain an estimate of the risk-neutral expected value by computing the average of a large number of discounted payoffs
+
+- This is a LLN argument based on frequentist reasoning
+
+
+## Valuation by Simulation (cont'd)
+
+- Consider an European call option that pays $C_{T}$ at expiry. 
+
+- First, we simulate the risk-neutral process of the state variables  from their observed values today
+
+- Second, apply the payoff function to the terminal values simulated along each path and obtain $C_{T,j}$ for path $j$
+
+- Then discount this payoff (assuming a constant risk-free rate):
+
+$$
+C_{0,j} = e^{-rT} C_{T,j}
+$$
+
+- Repeat this $M$ times and obtain:
+
+$$
+\hat{C}_{0} = \frac{1}{M} \sum\limits_{j=1}^{M} C_{0,j}
+$$
+
+
+## Valuation by Simulation (cont'd)
+
+<br>
+
+- This is basically a proposal to evaluate the expectation statistically using Monte Carlo integration
+
+- There will thus be sampling error introduced in the algorithm and we can estimate it via the *standard error* of the simulation 
+
+$$
+SE(\hat{C}_{0}) = \frac{SD(C_{0,j})}{\sqrt{M}}
+$$
+
+The standard deviation is given by:
+
+$$
+\mathrm{SD}\left(C_{0,j}\right) = \left(\frac{1}{M-1} \sum_{j=1}^M\left(C_{0,j} - \hat{C}_0\right)^2\right)^{\frac{1}{2}}
+$$
+
+

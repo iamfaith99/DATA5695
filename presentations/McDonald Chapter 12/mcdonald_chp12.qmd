@@ -9,7 +9,7 @@ title-slide-attributes:
   data-background-color: "#486790"
 format: 
   revealjs:
-    theme: jike.scss      # Modified simple theme.
+    theme: tjb.scss      # Modified simple theme.
     slide-number: c/t    # Numbered slides current/total.
     self-contained: true # Render to a single HTML file.
 execute:

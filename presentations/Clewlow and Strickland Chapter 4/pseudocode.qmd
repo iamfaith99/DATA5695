@@ -1,0 +1,24 @@
+```
+initialise_parameters { K, T, S, sig, r, div, N, M }
+{ precompute constants }
+dt = T/N
+nudt = (r-div-0.5*sig*2)*dt
+sigsdt = sig*sqrt(dt)
+ln{S} = \operatorname{ln}(S
+sum_CT = 0
+sum_CT2 = 0
+Eor j = 1 to M do (for each simulation }
+lnSt}=1n
+    for i = 1 to N do { for each time step |
+        \varepsilon = standard_normal sample
+        InSt = lnSt + nudt + sigsdt*\varepsilon { evolve the stock price }
+    next i
+    ST}=\operatorname{exp(lnSt)
+    CT = max( O, ST - K)
+    sum_CT = sum_CT + CT
+    sum_CT2 = sum_CT2 + CT*CT
+next j
+call_value = sum_CT/M* exp (-r*T)
+SD = sqrt( (sum_CT2 - sum_CT*sum_CT/M)*exp(-2*r*T)/(M-1))
+SE = SD/sqre(M)
+```

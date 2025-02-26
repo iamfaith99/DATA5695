@@ -1,9 +1,10 @@
 /*-- scss:defaults --*/
 @import url(https://fonts.googleapis.com/css?family=News+Cycle:400,700);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700);
 
 // fonts
-$font-family-sans-serif: Lato, sans-serif;
+$font-family-sans-serif: Ubuntu, Lato, sans-serif;
 $presentation-font-size-root: 30px;
 
 // colors
@@ -15,7 +16,7 @@ $link-color: #7aafde;
 $selection-bg: rgba(0, 0, 0, 0.99);
 
 // headings
-$presentation-heading-font: "News Cycle", sans-serif;
+$presentation-heading-font: "News Cycle", Ubuntu;
 
 // diagrams
 $mermaid-bg-color: $body-bg;
@@ -42,4 +43,3 @@ $mermaid-fg-color: $secondary;
   align-items: center;
   height: 100%;
 }
-
