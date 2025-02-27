@@ -1,0 +1,547 @@
+---
+title: "Homework 2"
+author: "Weldon T Antoine III"
+format: 
+  html:
+    code-fold: false
+jupyter: python3
+---
+
+```{python}
+import sys
+import os
+import numpy as np
+
+# Add the current directory to Python path to import binomial module
+current_dir = os.path.dirname(os.path.abspath('__file__'))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+
+from binomial import (
+    FinancialOption, ExerciseStyle, ExerciseType,
+    create_payoff, single_period_binomial, lattice
+    )
+```
+
+## Problem 10.1
+
+Let $S = \$100$, $K = \$105$, $r = 8\%$, $T = 0.5$, and $\delta = 0$. Let $u = 1.3$, $d = 0.8$, and $n = 1$.
+
+### a) European Call Option
+
+```{python}
+# Parameters for Problem 10.1
+S = 100  # spot price
+K = 105  # strike price
+r = 0.08  # interest rate
+T = 0.5  # time to expiry
+delta = 0  # dividend yield
+u = 1.3  # up factor
+d = 0.8  # down factor
+
+# Calculate volatility from u and d
+# Using the relationship: u = exp(σ√T)
+sigma = np.log(u/d) / (2 * np.sqrt(T))
+
+# Create call payoff
+call_payoff = create_payoff(ExerciseType.Call, K)
+
+# Calculate call price
+call_price = single_period_binomial(S, K, sigma, r, delta, T, call_payoff)
+
+print(f"European Call Option Price: ${call_price:.3f}")
+
+# Calculate Delta and B
+uS = S * u
+dS = S * d
+fu = max(uS - K, 0)
+fd = max(dS - K, 0)
+delta_call = (fu - fd) / (uS - dS)
+pu = (np.exp((r - delta)*T) - d) / (u - d)
+pd = 1 - pu
+B_call = np.exp(-r * T) * ((u*fd - d*fu) / (u - d))
+
+print(f"Delta (Δ): {delta_call:.3f}")
+print(f"B: ${B_call:.3f}")
+```
+
+### b) European Put Option
+
+```{python}
+# Create put payoff
+put_payoff = create_payoff(ExerciseType.Put, K)
+
+# Calculate put price
+put_price = single_period_binomial(S, K, sigma, r, delta, T, put_payoff)
+
+print(f"European Put Option Price: ${put_price:.3f}")
+
+# Calculate Delta and B for put
+fu_put = max(K - uS, 0)
+fd_put = max(K - dS, 0)
+delta_put = (fu_put - fd_put) / (uS - dS)
+B_put = np.exp(-r * T) * ((u*fd_put - d*fu_put) / (u - d))
+
+print(f"Delta (Δ): {delta_put:.3f}")
+print(f"B: ${B_put:.3f}")
+```
+
+## Problem 10.2
+
+Let $S = \$100$, $K = \$95$, $r = 8\%$, $T = 0.5$, and $\delta = 0$. Let $u = 1.3$, $d = 0.8$, and $n = 1$.
+
+### a) Verify European Call Price
+
+```{python}
+# Parameters for Problem 10.2
+S = 100
+K = 95
+r = 0.08
+T = 0.5
+delta = 0
+u = 1.3
+d = 0.8
+
+# Calculate volatility
+sigma = np.log(u/d) / (2 * np.sqrt(T))
+
+# Create call payoff and calculate price
+call_payoff = create_payoff(ExerciseType.Call, K)
+call_price = single_period_binomial(S, K, sigma, r, delta, T, call_payoff)
+
+print(f"European Call Option Price: ${call_price:.3f}")
+print(f"Expected Price: $16.196")
+print(f"Difference: ${abs(call_price - 16.196):.6f}")
+```
+
+### b) Arbitrage Analysis for Call Price = $17
+
+```{python}
+observed_price = 17.00
+theoretical_price = call_price
+arbitrage_profit = abs(observed_price - theoretical_price)
+
+if observed_price > theoretical_price:
+    print("The call is overpriced. Arbitrage strategy:")
+    print("1. Sell the call for $17.00")
+    print("2. Delta hedge and invest in risk-free bond")
+    print(f"3. Expected profit: ${arbitrage_profit:.3f}")
+else:
+    print("The call is underpriced. Arbitrage strategy:")
+    print("1. Buy the call for $17.00")
+    print("2. Delta hedge and borrow at risk-free rate")
+    print(f"3. Expected profit: ${arbitrage_profit:.3f}")
+```
+
+### c) Arbitrage Analysis for Call Price = $15.50
+
+```{python}
+observed_price = 15.50
+theoretical_price = call_price
+arbitrage_profit = abs(observed_price - theoretical_price)
+
+if observed_price > theoretical_price:
+    print("The call is overpriced. Arbitrage strategy:")
+    print("1. Sell the call for $15.50")
+    print("2. Delta hedge and invest in risk-free bond")
+    print(f"3. Expected profit: ${arbitrage_profit:.3f}")
+else:
+    print("The call is underpriced. Arbitrage strategy:")
+    print("1. Buy the call for $15.50")
+    print("2. Delta hedge and borrow at risk-free rate")
+    print(f"3. Expected profit: ${arbitrage_profit:.3f}")
+```
+
+## Problem 10.3
+
+Let $S = \$100$, $K = \$95$, $r = 8\%$, $T = 0.5$, and $\delta = 0$. Let $u = 1.3$, $d = 0.8$, and $n = 1$.
+
+### a) Verify European Put Price
+
+```{python}
+# Create put payoff and calculate price
+put_payoff = create_payoff(ExerciseType.Put, K)
+put_price = single_period_binomial(S, K, sigma, r, delta, T, put_payoff)
+
+print(f"European Put Option Price: ${put_price:.3f}")
+print(f"Expected Price: $7.471")
+print(f"Difference: ${abs(put_price - 7.471):.6f}")
+```
+
+### b) Arbitrage Analysis for Put Price = $8.00
+
+```{python}
+observed_price = 8.00
+theoretical_price = put_price
+arbitrage_profit = abs(observed_price - theoretical_price)
+
+if observed_price > theoretical_price:
+    print("The put is overpriced. Arbitrage strategy:")
+    print("1. Sell the put for $8.00")
+    print("2. Delta hedge and invest in risk-free bond")
+    print(f"3. Expected profit: ${arbitrage_profit:.3f}")
+else:
+    print("The put is underpriced. Arbitrage strategy:")
+    print("1. Buy the put for $8.00")
+    print("2. Delta hedge and borrow at risk-free rate")
+    print(f"3. Expected profit: ${arbitrage_profit:.3f}")
+```
+
+### c) Arbitrage Analysis for Put Price = $6.00
+
+```{python}
+observed_price = 6.00
+theoretical_price = put_price
+arbitrage_profit = abs(observed_price - theoretical_price)
+
+if observed_price > theoretical_price:
+    print("The put is overpriced. Arbitrage strategy:")
+    print("1. Sell the put for $6.00")
+    print("2. Delta hedge and invest in risk-free bond")
+    print(f"3. Expected profit: ${arbitrage_profit:.3f}")
+else:
+    print("The put is underpriced. Arbitrage strategy:")
+    print("1. Buy the put for $6.00")
+    print("2. Delta hedge and borrow at risk-free rate")
+    print(f"3. Expected profit: ${arbitrage_profit:.3f}")
+```
+
+## Problem 10.4
+
+Using Tesla (TSLA) stock data for the analysis.
+
+```{python}
+import yfinance as yf
+import pandas as pd
+from datetime import datetime, timedelta
+
+# Download Tesla data for the last 5 years
+tsla = yf.download('TSLA', 
+                   start=(datetime.now() - timedelta(days=5*365)).strftime('%Y-%m-%d'),
+                   end=datetime.now().strftime('%Y-%m-%d'))
+
+# Calculate daily returns
+tsla['Returns'] = tsla['Close'].pct_change()
+
+# 1. Compute annual volatility using all data
+annual_vol_all = tsla['Returns'].std() * np.sqrt(252)  # 252 trading days in a year
+print("1. Overall Annual Volatility for Tesla:")
+print(f"   {annual_vol_all:.2%}")
+
+# 2. Compute annual volatility for each calendar year
+print("\n2. Annual Volatility by Calendar Year:")
+yearly_vol = tsla.groupby(tsla.index.year)['Returns'].apply(
+    lambda x: x.std() * np.sqrt(252)
+)
+for year, vol in yearly_vol.items():
+    print(f"   {year}: {vol:.2%}")
+
+# 3. Compute volatility for first and second half of each year
+print("\n3. Semi-Annual Volatility by Year:")
+for year in tsla.index.year.unique():
+    year_data = tsla[tsla.index.year == year]
+    
+    # First half
+    h1_data = year_data[year_data.index.month <= 6]
+    h1_vol = h1_data['Returns'].std() * np.sqrt(252) if not h1_data.empty else None
+    
+    # Second half
+    h2_data = year_data[year_data.index.month > 6]
+    h2_vol = h2_data['Returns'].std() * np.sqrt(252) if not h2_data.empty else None
+    
+    print(f"\n   {year}:")
+    print(f"   - First Half:  {h1_vol:.2%}" if h1_vol else "   - First Half:  N/A")
+    print(f"   - Second Half: {h2_vol:.2%}" if h2_vol else "   - Second Half: N/A")
+    if h1_vol and h2_vol:
+        print(f"   - Variation:    {abs(h2_vol - h1_vol):.2%}")
+```
+
+## Problem 10.5
+
+Analyzing volatility patterns for Tesla (TSLA), Apple (AAPL), Microsoft (MSFT), and Amazon (AMZN).
+
+```{python}
+# Download data for all assets
+tickers = ['TSLA', 'AAPL', 'MSFT', 'AMZN']
+data = {}
+
+for ticker in tickers:
+    data[ticker] = yf.download(
+        ticker,
+        start=(datetime.now() - timedelta(days=5*365)).strftime('%Y-%m-%d'),
+        end=datetime.now().strftime('%Y-%m-%d')
+    )
+    data[ticker]['Returns'] = data[ticker]['Close'].pct_change()
+
+# Calculate annual volatility for each asset by year
+print("Annual Volatility by Year for Each Asset:")
+print("\nYear", end='')
+for ticker in tickers:
+    print(f" | {ticker:^10}", end='')
+print("\n" + "-"*60)
+
+years = sorted(set(data[tickers[0]].index.year))
+for year in years:
+    print(f"{year}", end='')
+    for ticker in tickers:
+        year_data = data[ticker][data[ticker].index.year == year]
+        vol = year_data['Returns'].std() * np.sqrt(252)
+        print(f" | {vol:8.2%}", end='')
+    print()
+
+# Calculate correlation matrix for the most recent year
+print("\nCorrelation Matrix for Returns (Most Recent Year):")
+recent_year = max(years)
+returns_df = pd.DataFrame()
+for ticker in tickers:
+    year_data = data[ticker][data[ticker].index.year == recent_year]
+    returns_df[ticker] = year_data['Returns']
+
+correlation_matrix = returns_df.corr()
+print(correlation_matrix.round(3))
+
+# Analyze volatility patterns
+print("\nObservations about Historical Volatility Patterns:")
+print("1. Volatility Trends:")
+for ticker in tickers:
+    yearly_vols = data[ticker].groupby(data[ticker].index.year)['Returns'].apply(
+        lambda x: x.std() * np.sqrt(252)
+    )
+    if len(yearly_vols) >= 2:  # Make sure we have at least 2 years of data
+        first_vol = yearly_vols.iloc[0]
+        last_vol = yearly_vols.iloc[-1]
+        trend = "increasing" if last_vol > first_vol else "decreasing"
+        print(f"   - {ticker}: Overall {trend} trend in volatility")
+        print(f"     (First year: {first_vol:.2%}, Last year: {last_vol:.2%})")
+    else:
+        print(f"   - {ticker}: Insufficient data for trend analysis")
+
+print("\n2. Volatility Comparison:")
+recent_vols = {}
+for ticker in tickers:
+    recent_data = data[ticker][data[ticker].index.year == recent_year]
+    recent_vols[ticker] = recent_data['Returns'].std() * np.sqrt(252)
+
+most_volatile = max(recent_vols.items(), key=lambda x: x[1])
+least_volatile = min(recent_vols.items(), key=lambda x: x[1])
+
+print(f"   - Most volatile asset: {most_volatile[0]} ({most_volatile[1]:.2%})")
+print(f"   - Least volatile asset: {least_volatile[0]} ({least_volatile[1]:.2%})")
+
+print("\n3. Co-movement Analysis:")
+print("   - Assets showing strong positive correlation (>0.7):")
+for i in range(len(tickers)):
+    for j in range(i+1, len(tickers)):
+        corr = correlation_matrix.iloc[i,j]
+        if corr > 0.7:
+            print(f"     {tickers[i]} and {tickers[j]}: {corr:.3f}")
+
+# Additional analysis of volatility patterns
+print("\n4. Volatility Pattern Analysis:")
+for ticker in tickers:
+    yearly_data = data[ticker].groupby(data[ticker].index.year)['Returns'].agg(['std', 'mean'])
+    yearly_data['annualized_vol'] = yearly_data['std'] * np.sqrt(252)
+    
+    print(f"\n{ticker}:")
+    print("   Year-by-Year Statistics:")
+    for year in yearly_data.index:
+        vol = yearly_data.loc[year, 'annualized_vol']
+        mean_return = yearly_data.loc[year, 'mean'] * 252  # Annualized mean return
+        print(f"   {year}: Volatility = {vol:.2%}, Mean Annual Return = {mean_return:.2%}")
+```
+
+## Problem 10.12
+
+Let $S = \$100$, $K = \$95$, $r = 8\%$ (continuously compounded), $\sigma = 30\%$, $\delta = 0$, $T = 1$ year, and $n = 3$.
+
+### a) American vs European Call Option
+
+```{python}
+# Parameters for Problem 10.12
+S = 100  # spot price
+K = 95   # strike price
+r = 0.08  # interest rate (continuously compounded)
+sigma = 0.30  # volatility
+delta = 0  # dividend yield
+T = 1.0  # time to expiry
+n = 3  # number of periods
+
+# Create option objects
+euro_call = FinancialOption(
+    ex_style=ExerciseStyle.European,
+    ex_type=ExerciseType.Call,
+    spot=S,
+    strike=K,
+    rate=r,
+    volatility=sigma,
+    dividend=delta,
+    expiry=T
+)
+
+amer_call = FinancialOption(
+    ex_style=ExerciseStyle.American,
+    ex_type=ExerciseType.Call,
+    spot=S,
+    strike=K,
+    rate=r,
+    volatility=sigma,
+    dividend=delta,
+    expiry=T
+)
+
+# Calculate prices using lattice method
+euro_call_result = lattice(euro_call, n)
+amer_call_result = lattice(amer_call, n)
+
+print("European Call Price:", f"${euro_call_result.price:.3f}")
+print("American Call Price:", f"${amer_call_result.price:.3f}")
+print("Expected Price: $18.283")
+print(f"Difference from expected: ${abs(euro_call_result.price - 18.283):.6f}")
+print("\nVerification: The prices are the same because with no dividends,")
+print("there is no advantage to early exercise of an American call option.")
+```
+
+### b) European Put Option and Put-Call Parity
+
+```{python}
+# Calculate European put price
+euro_put = FinancialOption(
+    ex_style=ExerciseStyle.European,
+    ex_type=ExerciseType.Put,
+    spot=S,
+    strike=K,
+    rate=r,
+    volatility=sigma,
+    dividend=delta,
+    expiry=T
+)
+
+euro_put_result = lattice(euro_put, n)
+print("European Put Price:", f"${euro_put_result.price:.3f}")
+print("Expected Price: $5.979")
+print(f"Difference from expected: ${abs(euro_put_result.price - 5.979):.6f}")
+
+# Verify put-call parity
+# Put-Call Parity: C - P = S - K*exp(-rT)
+parity_lhs = euro_call_result.price - euro_put_result.price
+parity_rhs = S - K * np.exp(-r * T)
+
+print("\nPut-Call Parity Verification:")
+print(f"C - P = ${parity_lhs:.3f}")
+print(f"S - Ke^(-rT) = ${parity_rhs:.3f}")
+print(f"Difference: ${abs(parity_lhs - parity_rhs):.6f}")
+```
+
+### c) American Put Option
+
+```{python}
+# Calculate American put price
+amer_put = FinancialOption(
+    ex_style=ExerciseStyle.American,
+    ex_type=ExerciseType.Put,
+    spot=S,
+    strike=K,
+    rate=r,
+    volatility=sigma,
+    dividend=delta,
+    expiry=T
+)
+
+amer_put_result = lattice(amer_put, n)
+print("American Put Price:", f"${amer_put_result.price:.3f}")
+print("Expected Price: $6.678")
+print(f"Difference from expected: ${abs(amer_put_result.price - 6.678):.6f}")
+```
+
+## Problem 10.13
+
+Repeat the previous problem with a continuous dividend yield of 8% per year.
+
+```{python}
+# Update dividend yield to 8%
+delta = 0.08
+
+# Calculate prices for all options with dividend
+euro_call_div = FinancialOption(
+    ex_style=ExerciseStyle.European,
+    ex_type=ExerciseType.Call,
+    spot=S,
+    strike=K,
+    rate=r,
+    volatility=sigma,
+    dividend=delta,
+    expiry=T
+)
+
+amer_call_div = FinancialOption(
+    ex_style=ExerciseStyle.American,
+    ex_type=ExerciseType.Call,
+    spot=S,
+    strike=K,
+    rate=r,
+    volatility=sigma,
+    dividend=delta,
+    expiry=T
+)
+
+euro_put_div = FinancialOption(
+    ex_style=ExerciseStyle.European,
+    ex_type=ExerciseType.Put,
+    spot=S,
+    strike=K,
+    rate=r,
+    volatility=sigma,
+    dividend=delta,
+    expiry=T
+)
+
+amer_put_div = FinancialOption(
+    ex_style=ExerciseStyle.American,
+    ex_type=ExerciseType.Put,
+    spot=S,
+    strike=K,
+    rate=r,
+    volatility=sigma,
+    dividend=delta,
+    expiry=T
+)
+
+# Calculate all prices
+euro_call_div_result = lattice(euro_call_div, n)
+amer_call_div_result = lattice(amer_call_div, n)
+euro_put_div_result = lattice(euro_put_div, n)
+amer_put_div_result = lattice(amer_put_div, n)
+
+print("With 8% Continuous Dividend Yield:")
+print(f"European Call: ${euro_call_div_result.price:.3f}")
+print(f"American Call: ${amer_call_div_result.price:.3f}")
+print(f"European Put:  ${euro_put_div_result.price:.3f}")
+print(f"American Put:  ${amer_put_div_result.price:.3f}")
+
+# Check for early exercise
+print("\nEarly Exercise Analysis:")
+print("1. American Call vs European Call:")
+call_diff = amer_call_div_result.price - euro_call_div_result.price
+if call_diff > 0.001:  # Using a small threshold for floating-point comparison
+    print(f"   Early exercise premium: ${call_diff:.3f}")
+    print("   American call may be exercised early due to high dividend yield")
+else:
+    print("   No significant early exercise premium for calls")
+
+print("\n2. American Put vs European Put:")
+put_diff = amer_put_div_result.price - euro_put_div_result.price
+if put_diff > 0.001:
+    print(f"   Early exercise premium: ${put_diff:.3f}")
+    print("   American put may be exercised early")
+else:
+    print("   No significant early exercise premium for puts")
+
+# Verify modified put-call parity with dividends
+# C - P = S*exp(-δT) - K*exp(-rT)
+parity_lhs_div = euro_call_div_result.price - euro_put_div_result.price
+parity_rhs_div = S * np.exp(-delta * T) - K * np.exp(-r * T)
+
+print("\nPut-Call Parity with Dividends:")
+print(f"C - P = ${parity_lhs_div:.3f}")
+print(f"Se^(-δT) - Ke^(-rT) = ${parity_rhs_div:.3f}")
+print(f"Difference: ${abs(parity_lhs_div - parity_rhs_div):.6f}")
