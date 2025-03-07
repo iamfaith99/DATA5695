@@ -1,0 +1,410 @@
+---
+title: "Monte Carlo Valuation"
+subtitle: |
+  | McDonald Chapter 19
+  | DATA 5695/6695 
+author: Tyler J. Brough
+date: 2025-03-06
+title-slide-attributes:
+  data-background-color: "#486790"
+format: 
+  revealjs:
+    theme: tjb.scss      # Modified simple theme.
+    slide-number: c/t    # Numbered slides current/total.
+    self-contained: true # Render to a single HTML file.
+execute:
+  eval: false
+  echo: true
+---
+
+# McDonald Chapter 19: Monte Carlo Valuation 
+
+## Simulating Brownian Motion 
+
+```{python}
+#| eval: true
+#| echo: false
+import numpy as np
+import seaborn as sns
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn.objects as so
+from scipy.stats import norm
+```
+
+<br>
+
+```{python}
+#| code-line-numbers: "|2-4|5|6"
+#| echo: true
+#| eval: true
+def asset_paths(S: float, mu: float, sigma: float, div: float, T: int, n_reps: int, n_steps: int) -> np.ndarray:
+  dt = T / n_steps
+  nudt = (mu - div - 0.5*sigma*sigma)*dt
+  sidt = sigma*np.sqrt(dt)
+  z = nudt + sidt*np.random.normal(size=(n_reps, n_steps))
+  paths = np.cumsum(np.concatenate((np.full((n_reps, 1), np.log(S)), z), axis=1), axis=1)
+
+  return np.exp(paths)
+```
+
+
+# Section 19.4: Monte Carlo Valuation
+
+## Naive Monte Carlo Valuation of a European Call
+
+<br>
+
+```{python}
+#| code-line-numbers: "|6"
+#| echo: true
+#| eval: true
+np.random.seed(1974)
+S, K, r, v, q, T = 41.0, 40.0, 0.08, 0.30, 0.0, 1.0
+n_reps, n_steps = 10_000, 1
+paths = asset_paths(S, r, v, q, T, n_reps, n_steps)
+payoffs = np.maximum(paths[:,-1] - K, 0.0)
+call_prc = np.exp(-r*T) * payoffs.mean()
+se = np.std(payoffs, ddof=1) / np.sqrt(n_reps)
+call_prc, se
+```
+
+
+## Table 19.2
+
+<br>
+
+::: {.center}
+![](../../images/mcdonald/Chp19/Table19-2.png){width=700px height=400px}
+:::
+
+
+## Reproducing Table 19.2
+
+<br>
+
+```{python}
+#| echo: true
+#| eval: true
+def naive_monte_carlo(S, K, r, v, q, T, n_reps):
+    paths = asset_paths(S, r, v, q, T, n_reps, 1)
+    payoffs = np.maximum(paths[:,-1] - K, 0.0)
+    call_prc = np.exp(-r*T) * payoffs.mean()
+    se = np.std(payoffs, ddof=1) / np.sqrt(n_reps)
+    return call_prc, se
+
+prices = np.zeros(5)
+S, K, r, v, q, T, n_reps = 40.0, 40.0, 0.08, 0.30, 0.0, 91/365, 500
+
+for i in range(5):
+  prices[i], _ = naive_monte_carlo(S, K, r, v, q, T, n_reps)
+  print(f"({i+1}, {prices[i]})")
+```
+
+
+## Arithmetic Asian Option 
+
+- Monte Carlo valuation of Asian options
+- The payoff is based on the average price over the life of the option
+
+$$
+\begin{aligned}
+S_{1} &= 40 e^{\left(r-\delta-0.5 \sigma^{2}\right) T / 3+\sigma \sqrt{T / 3} Z(1)} \\
+S_{2} &= S_{1} e^{\left(r-\delta-0.5 \sigma^{2}\right) T / 3+\sigma \sqrt{T / 3} Z(2)} \\
+S_{3} &= S_{2} e^{\left(r-\delta-0.5 \sigma^{2}\right) T / 3+\sigma \sqrt{T / 3} Z(3)}
+\end{aligned}
+$$
+
+- The value of the Asian option is computed as
+
+$$
+C_{\mathrm{Asian}} = e^{-r T} E\left(\max \left[\frac{1}{3}\sum_{i=1}^{3} S_{i} - K, 0\right]\right)
+$$
+
+
+## Figure 19.2
+
+<br>
+
+::: {.center}
+![](../../images/mcdonald/Chp19/Figure19-2.png){width=800px height=400px}
+:::
+
+
+## Reproducing Figure 19.2
+
+```{python}
+#| echo: true
+#| eval: true
+np.random.seed(2002)
+S, r, v, q, T, n_reps, n_steps = 40.0, 0.08, 0.30, 0.0, 1.0/3.0, 100_000, 3
+paths = asset_paths(S, r, v, q, T, n_reps, n_steps)
+
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(6, 4), sharex=True)
+
+ending_values = paths[:, -1]  # Last column of each row
+path_averages = np.mean(paths, axis=1)  # Average of each row
+
+# Plot histogram of ending values in the upper panel
+sns.histplot(ending_values, kde=True, ax=ax1, color='skyblue')
+ax1.set_title('Distribution of Ending Values')
+ax1.set_ylabel('Frequency')
+
+# Plot histogram of path averages in the lower panel
+sns.histplot(path_averages, kde=True, ax=ax2, color='salmon')
+ax2.set_title('Distribution of Path Averages')
+ax2.set_xlabel('Value')
+ax2.set_ylabel('Frequency')
+
+# Adjust spacing between subplots
+plt.tight_layout()
+
+# Show the plot
+plt.show()
+```
+
+
+## Valuing an Arithmetic Asian Option via Monte Carlo
+
+
+
+
+# Section 19.5: Efficient Monte Carlo Valuation
+
+## Efficient Monte Carlo Valuation (cont'd)
+
+::: {.incremental}
+- Control variate method
+  - Estimate the error on each trial by using the price of a related option that does have a pricing formula
+  - Example: use errors from geometric Asian option to correct the estimate for the arithmetic Asian option price
+- Antithetic variate method
+  - For every draw also obtain the opposite and equally likely realizations to reduce variance of the estimate
+- Stratified sampling
+  - Treat each number as a random draw from each percentile of the uniform distribution
+- Other methods
+  - Importance sampling, low discrepancy sequences
+:::
+
+## Efficient Monte Carlo Valuation
+
+::: {.center} 
+![](../../images/mcdonald/Chp19/Figure19-3.png){width=650px height=650px}
+:::
+
+
+## Antithetic Monte Carlo
+
+<br>
+
+```{python}
+#| code-line-numbers: "|4-5|11"
+#| echo: true
+#| eval: true
+import numpy as np
+
+def antithetic_normals(n_reps: int, n_steps: int) -> np.ndarray:
+  z = np.random.normal(size=(n_reps, n_steps))
+  return np.vstack((z,-z))
+
+def asset_paths_anti(S: float, mu: float, sigma: float, div: float, T: int, n_reps: int, n_steps: int) -> np.ndarray:
+  dt = T / n_steps
+  nudt = (mu - div - 0.5*sigma*sigma)*dt
+  sidt = sigma*np.sqrt(dt)
+  z = nudt + sidt*antithetic_normals(n_reps, n_steps)
+  paths = np.cumsum(np.concatenate((np.full((n_reps*2, 1), np.log(S)), z), axis=1), axis=1)
+
+  return np.exp(paths)
+```
+
+## Antithetic Monte Carlo (cont'd)
+
+<br>
+
+```{python}
+#| code-line-numbers: "|4|6|7"
+#| echo: true
+#| eval: true
+np.random.seed(1974)
+S, K, r, v, q, T = 41.0, 40.0, 0.08, 0.30, 0.0, 1.0
+n_reps, n_steps = 10_000, 1
+paths = asset_paths_anti(S, r, v, q, T, n_reps, n_steps)
+payoffs = np.maximum(paths[:,-1] - K, 0.0)
+call_prc = np.exp(-r*T) * payoffs.mean()
+se = np.std(payoffs, ddof=1) / np.sqrt(n_reps*2)
+call_prc, se
+```
+
+
+## Stratfied Monte Carlo
+
+<br>
+
+- Stratified sampling controls the region in which random numbers are generated.
+- Suppose you have $100$ uniform random draws
+- $u_{i}, \quad i = 1, \ldots, 100$ 
+- With simple Monte Carlo you would compute: $z_{i} \sim N^{-1}(u_{i})$ 
+
+<br>
+
+```{python}
+#| code-line-numbers: "|7"
+#| echo: true
+#| eval: true
+np.random.seed(1937)
+M = 100
+u = np.random.uniform(size=M)
+z = norm.ppf(u)
+```
+
+
+## Stratified Monte Carlo (cont'd)
+
+- Because $M = 100$ sampling error can create a histogram of the $z_{i}$'s that does not look "normal"
+- Certain areas of the distribution are under- or over-represented given the "small" sample
+
+```{python}
+#| eval: true
+#| echo: true
+(so.Plot(z).add(so.Bars(), so.Hist()))
+```
+
+
+## Stratified Monte Carlo (cont'd)
+
+<br>
+
+::: {.incremental}
+- Stratified sampling seeks to account for this bias by sampling more evenly from the distribution's percentiles
+- This is done by discretizing the percentiles into *strata*
+- ***Strata:*** *a group into which members of a population are divided*
+- Take $u_{0}$ and divide it by $M = 100$: $\hat{u}_{0} = u_{0} / M$
+- Now $\hat{u}_{0}$ is uniformly distributed on $[0.0, 0.01]$
+- Set $\hat{u}_{1} = (u_{1} / M) + 0.01$ so that $\hat{u}_{1} \sim U[0.01, 0.02]$
+- For the $i^{\text{th}}$ draw: $\hat{u}_{i} = (i + u_{i}) / M$ 
+- Proceeding in this way we are guaranteed to draw from each of the $M$ strata!
+- This should result in *variance reduction* for a fixed $M$
+:::
+
+
+## Stratified Monte Carlo (cont'd)
+
+<br>
+
+```{python}
+#| code-line-numbers: "|7"
+#| echo: true
+#| eval: true
+np.random.seed(1937)
+M = 100
+u = np.random.uniform(size=M)
+uhat = (np.arange(M) + u) / M
+zhat = norm.ppf(uhat)
+(so.Plot(zhat).add(so.Bars(), so.Hist()))
+```
+
+## Stratified Monte Carlo (cont'd)
+
+<br>
+
+```{python}
+#| echo: true
+#| eval: true
+def stratified_normals(n_reps: int) -> np.ndarray:
+  u = np.random.uniform(size=n_reps)
+  uhat = (np.arange(n_reps) + u) / n_reps
+  zhat = norm.ppf(uhat)
+  return zhat
+
+def asset_paths_strat(S: float, mu: float, sigma: float, div: float, T: int, n_reps: int) -> np.ndarray:
+  dt = T 
+  nudt = (mu - div - 0.5*sigma*sigma)*dt
+  sidt = sigma*np.sqrt(dt)
+  z = nudt + sidt*stratified_normals(n_reps)
+  paths = S * np.exp(z)
+
+  return paths
+
+np.random.seed(1943)
+S, K, r, v, q, T = 41.0, 40.0, 0.08, 0.30, 0.0, 1.0
+n_reps = 10_000
+paths = asset_paths_strat(S, r, v, q, T, n_reps)
+payoffs = np.maximum(paths - K, 0.0)
+call_prc = np.exp(-r*T) * payoffs.mean()
+se = np.std(payoffs, ddof=1) / np.sqrt(n_reps*2)
+call_prc, se
+```
+
+## Stratified Monte Carlo (cont'd)
+
+Let's replicate the lower panel of Figure 19.3.
+
+```{python}
+#| echo: true
+#| eval: true
+def strat_monte_carlo(S, K, r, v, q, T, n_reps):
+    paths = asset_paths_strat(S, r, v, q, T, n_reps)
+    payoffs = np.maximum(paths - K, 0.0)
+    call_prc = np.exp(-r*T) * payoffs.mean()
+    se = np.std(payoffs, ddof=1) / np.sqrt(n_reps)
+    return call_prc, se
+
+n_sims, n_reps = 100, 200
+naive_prc = np.zeros(n_sims)
+strat_prc = np.zeros(n_sims)
+
+for i in range(n_sims):
+    naive_prc[i], _ = naive_monte_carlo(S, K, r, v, q, T, n_reps)
+    strat_prc[i], _ = strat_monte_carlo(S, K, r, v, q, T, n_reps)
+```
+
+
+## Reproducing Figure 19.3 
+
+<br>
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{python}
+#| echo: false
+#| eval: true
+(so.Plot(naive_prc).add(so.Bars(), so.Hist()))
+```
+:::
+
+::: {.column width="50%"}
+```{python}
+#| echo: false
+#| eval: true
+(so.Plot(strat_prc).add(so.Bars(), so.Hist()))
+```
+:::
+
+::::
+
+
+## Combined 
+
+```{python}
+#| echo: false
+#| eval: true
+#| code-block-height: 150px
+#| code-overflow: scroll
+import pandas as pd
+
+df = pd.DataFrame({
+    'prices': np.concatenate([naive_prc, strat_prc]),
+    'type': ['Naive'] * len(naive_prc) + ['Stratified'] * len(strat_prc)
+})
+
+(
+    so.Plot(df, x="prices", color="type")
+    .add(so.Bars(), so.Hist(), so.Dodge())  
+    .scale(color=["orange", "purple"])
+    .label(x="Prices", y="Count", color="Type")
+    .layout(size=(10, 6))
+    .show()
+)
+```
