@@ -80,3 +80,82 @@ $$
 $$
 
 
+## Simulating Brownian Motion
+
+<br>
+
+We need to simulate the geometric Brownian motion (GBM) process, which is:
+
+$$
+dS_{t} = (r - \delta)S_{t} dt + \sigma S_{t} dz_{t}
+$$
+
+One of the most efficient ways to simualte this is by taking the natural logarithm of the variable that follows the GBM process:
+
+$$
+dx_{t} = \nu dt + \sigma d_{z}, \quad \quad \nu = r - \delta - \frac{1}{2} \sigma^{2}
+$$
+
+where $x_{t} = \ln{(S_{t})}$
+
+## Simulating Brownian Motion (cont'd)
+
+<br>
+
+We can discretize this continuous process by changing the infinitesimals $dx$, $dt$, and $dz$ into smal change $\Delta x$, $\Delta t$, and $\Delta z$
+
+$$
+\Delta x = \nu \Delta t + \sigma \Delta z
+$$
+
+This actually involves no approximation as in this case it is actually the solution to the stochastic differential equation (SDE) which can be written:
+
+$$
+x_{t + \Delta t} = x_{t} + \nu \Delta t + \sigma(z_{t + \Delta t} - z_{t})
+$$
+
+In terms of the asset price $S$ we have
+
+$$
+S_{t + \Delta t} = S_{t} \exp{(\nu \Delta t + \sigma (z_{t + \Delta t} - z_{t}))}
+$$
+
+
+## Simulating Brownian Motion (cont'd)
+
+```{python}
+#| eval: true
+#| echo: true
+import numpy as np
+import matplotlib.pyplot as plt
+
+def asset_paths(S: float, mu: float, sigma: float, div: float, T: int, n_reps: int, n_steps: int) -> np.ndarray:
+  dt = T / n_steps
+  nudt = (mu - div - 0.5*sigma*sigma)*dt
+  sidt = sigma*np.sqrt(dt)
+  z = nudt + sidt*np.random.normal(size=(n_reps, n_steps))
+  paths = np.cumsum(np.concatenate((np.full((n_reps, 1), np.log(S)), z), axis=1), axis=1)
+
+  return np.exp(paths)
+
+n_reps, n_steps = 10, 100
+paths = asset_paths(100.0, 0.06, 0.20, 0.03, 1, n_reps, n_steps)
+```
+
+```{python}
+#| echo: false
+#| eval: true
+# Plotting
+plt.figure(figsize=(10, 6))  # Adjust figure size as needed
+
+for i in range(n_reps):
+    plt.plot(paths[i])
+
+plt.xlabel('Time Steps')
+plt.ylabel('Dollar Price ($)')
+plt.title('Multiple Simulated Price Paths')
+plt.grid(True)
+plt.show()
+```
+
+

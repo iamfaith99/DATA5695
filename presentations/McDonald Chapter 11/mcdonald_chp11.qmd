@@ -55,7 +55,7 @@ $$
 
 - The following graph displays the price, above which early exercise is optimal for a 5-year call option with $K =\$100$, $r = 5\%$, and $\delta = 5\%$
 
-:::{.center}
+::: {.center}
 ![](../../images/mcdonald/Chp11/Figure11-1.png){width=950px height=450px}
 :::
 
